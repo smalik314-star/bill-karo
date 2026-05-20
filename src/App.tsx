@@ -8,9 +8,9 @@ import ClientDetail from './pages/ClientDetail';
 import NewQuotation from './pages/NewQuotation';
 import Invoices from './pages/Invoices';
 import ProfitCalculator from './components/profit/ProfitCalculator';
-import DigitalCard from './components/DigitalCard';
-import LabourAttendance from './components/LabourAttendance';
-import ExpenseTracker from './components/ExpenseTracker';
+import BusinessCard from './pages/BusinessCard';
+import Labour from './pages/Labour';
+import Expenses from './pages/Expenses';
 import StockInventory from './components/StockInventory';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -58,9 +58,9 @@ function MainAppContent() {
             <Route path="/quotations" element={<NewQuotation />} />
             <Route path="/invoices" element={<Invoices />} />
             <Route path="/profit" element={<ProfitCalculator />} />
-            <Route path="/labour" element={<LabourAttendance />} />
-            <Route path="/expenses" element={<ExpenseTracker />} />
-            <Route path="/digital-card" element={<DigitalCard />} />
+            <Route path="/labour" element={<Labour />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/digital-card" element={<BusinessCard />} />
             <Route path="/stock" element={<StockInventory />} />
             <Route path="/profile" element={<ProfileSetup />} />
           </Routes>
