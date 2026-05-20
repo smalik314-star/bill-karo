@@ -137,7 +137,7 @@ export default function Login() {
         <div className="text-center pt-2">
           <p className="text-xs text-gray-400">
             नया खाता चाहिए?{' '}
-            <Link to="/register" className="text-amber-500 hover:underline font-extrabold ml-1">
+            <Link to="/signup" className="text-amber-500 hover:underline font-extrabold ml-1">
               यहाँ नया अकाउंट बनाएं (Register)
             </Link>
           </p>

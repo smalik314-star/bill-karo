@@ -32,15 +32,15 @@ function MainAppContent() {
         <PWAInstallPrompt />
 
         {/* Global Header (Only displayed if not on auth pages) */}
-        {window.location.pathname !== '/login' && window.location.pathname !== '/register' && (
+        {window.location.pathname !== '/signin' && window.location.pathname !== '/signup' && (
           <Header />
         )}
 
         {/* Active router views */}
         <div id="active-viewport" className="animate-fadeIn mt-2">
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/signin" element={<Login />} />
+            <Route path="/signup" element={<Register />} />
             
             <Route path="/" element={<Dashboard onNavigate={(tab) => {
               const tabPathMap: Record<string, string> = {

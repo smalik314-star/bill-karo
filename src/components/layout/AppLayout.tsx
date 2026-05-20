@@ -35,8 +35,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
       setLoading(false);
       
       // Redirect to login if user is not authorized and trying to visit protected pages
-      if (!session && location.pathname !== '/login' && location.pathname !== '/register') {
-        navigate('/login');
+      if (!session && location.pathname !== '/signin' && location.pathname !== '/signup') {
+        navigate('/signin');
       }
     });
 
@@ -44,8 +44,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setLoading(false);
-      if (!session && location.pathname !== '/login' && location.pathname !== '/register') {
-        navigate('/login');
+      if (!session && location.pathname !== '/signin' && location.pathname !== '/signup') {
+        navigate('/signin');
       }
     });
 
@@ -60,14 +60,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success('लॉगआउट सफल रहा!');
-      navigate('/login');
+      navigate('/signin');
     } catch (err) {
       toast.error('लॉगआउट में त्रुटि!');
     }
   };
 
   // Skip layouts if hitting authentication screens
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
 
   if (loading) {
     return (

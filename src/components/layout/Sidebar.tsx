@@ -48,7 +48,7 @@ export default function Sidebar() {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success('लॉगआउट सफल रहा!');
-      navigate('/login');
+      navigate('/signin');
     } catch (err: any) {
       toast.error('लॉगआउट में त्रुटि हुई!');
     }

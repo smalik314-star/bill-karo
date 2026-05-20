@@ -262,7 +262,7 @@ export default function Register() {
         <div className="text-center pt-2 border-t border-gray-800">
           <p className="text-xs text-gray-400">
             पहले से ही खाता है?{' '}
-            <Link to="/login" className="text-amber-500 hover:underline font-extrabold ml-1">
+            <Link to="/signin" className="text-amber-500 hover:underline font-extrabold ml-1">
               यहाँ लॉगइन करें (Sign In)
             </Link>
           </p>
