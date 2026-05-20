@@ -40,7 +40,7 @@ export default function Sidebar() {
     { id: 'expenses', path: '/expenses', label: 'कमार्इ-खर्चा (Expense Book)', icon: TrendingUp },
     { id: 'digital-card', path: '/digital-card', label: 'डिजिटल कार्ड (Visiting Card)', icon: CreditCard },
     { id: 'stock', path: '/stock', label: 'स्टॉक माल (Inventory)', icon: Package },
-    { id: 'profile', path: '/profile', label: 'ओनर प्रोफाइल (Settings)', icon: Building },
+    { id: 'profile', path: '/settings', label: 'सेटिंग्स और प्रोफाइल (Settings)', icon: Building },
   ];
 
   const handleLogout = async () => {

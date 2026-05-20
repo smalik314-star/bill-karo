@@ -192,14 +192,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </button>
 
               <button
-                onClick={() => handleMoreItemNavigate('/profile')}
+                onClick={() => handleMoreItemNavigate('/settings')}
                 className="flex items-center space-x-3 bg-gray-950/70 border border-gray-850 p-3.5 rounded-2xl hover:border-amber-500/40 text-left transition cursor-pointer"
               >
                 <div className="h-9 w-9 bg-gray-600/10 rounded-xl flex items-center justify-center text-gray-300">
                   <Building className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-gray-200 block">ओनर प्रोफाइल</span>
+                  <span className="text-xs font-black text-gray-200 block">सिटिंग्स व प्रोफाइल</span>
                   <span className="text-[9.5px] text-gray-500 block leading-none mt-0.5">Settings Info</span>
                 </div>
               </button>

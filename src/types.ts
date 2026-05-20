@@ -10,6 +10,8 @@ export interface BusinessProfile {
   ifscCode: string;
   upiId: string;
   signatureText: string;
+  logoUrl?: string;
+  language?: 'Hinglish' | 'Hindi' | 'English';
 }
 
 export interface Client {

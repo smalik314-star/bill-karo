@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
-import ProfileSetup from './components/ProfileSetup';
 import Clients from './pages/Clients';
 import ClientDetail from './pages/ClientDetail';
 import NewQuotation from './pages/NewQuotation';
@@ -14,6 +13,8 @@ import Expenses from './pages/Expenses';
 import StockInventory from './components/StockInventory';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import Settings from './pages/Settings';
+import Pricing from './pages/Pricing';
 import AppLayout from './components/layout/AppLayout';
 import { Toaster } from 'react-hot-toast';
 
@@ -48,7 +49,7 @@ function MainAppContent() {
                 expenses: '/expenses',
                 'digital-card': '/digital-card',
                 stock: '/stock',
-                profile: '/profile'
+                profile: '/settings'
               };
               navigate(tabPathMap[tab] || '/');
             }} />} />
@@ -62,7 +63,9 @@ function MainAppContent() {
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/digital-card" element={<BusinessCard />} />
             <Route path="/stock" element={<StockInventory />} />
-            <Route path="/profile" element={<ProfileSetup />} />
+            <Route path="/profile" element={<Settings />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/pricing" element={<Pricing />} />
           </Routes>
         </div>
       </div>
