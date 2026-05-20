@@ -17,6 +17,7 @@ import Settings from './pages/Settings';
 import Pricing from './pages/Pricing';
 import AppLayout from './components/layout/AppLayout';
 import { Toaster } from 'react-hot-toast';
+import PWAInstallPrompt from './components/ui/PWAInstallPrompt';
 
 function MainAppContent() {
   const navigate = useNavigate();
@@ -26,6 +27,9 @@ function MainAppContent() {
       <div className="min-h-screen bg-[#0B0F1A] text-gray-100 flex flex-col selection:bg-amber-500 selection:text-black">
         {/* Toast notifications */}
         <Toaster position="top-center" reverseOrder={false} />
+
+        {/* PWA Install Alert Prompter */}
+        <PWAInstallPrompt />
 
         {/* Global Header (Only displayed if not on auth pages) */}
         {window.location.pathname !== '/login' && window.location.pathname !== '/register' && (
