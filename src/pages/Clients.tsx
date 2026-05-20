@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAppStore } from '../store';
+import useTranslation from '../hooks/useTranslation';
 import ClientCard from '../components/clients/ClientCard';
 import AddClientModal from '../components/clients/AddClientModal';
 import { 
@@ -20,6 +21,7 @@ import { toast } from 'react-hot-toast';
 
 export default function Clients() {
   const store = useAppStore();
+  const { t } = useTranslation();
   const [supabaseMode, setSupabaseMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -187,23 +189,23 @@ export default function Clients() {
               <Users className="h-4 w-4" />
             </span>
             <span className="text-[9.5px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">
-              खता बुक प्रबंधन
+              {t('खता बुक प्रबंधन')}
             </span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans flex items-center">
-            ग्राहक खाता बुक (My Clients)
+            {t('ग्राहक खाता बुक (My Clients)')}
           </h2>
           <p className="text-xs text-gray-550">
             {supabaseMode 
-              ? 'बही खाता लाइव क्लाउड डेटा से सिंक्रोनाइज्ड है।' 
-              : 'सभी एंट्रीज फोन के लोकल बही खाता स्टोरेज में सुरक्षित हैं।'}
+              ? t('बही खाता लाइव क्लाउड डेटा से सिंक्रोनाइज्ड है।') 
+              : t('सभी एंट्रीज फोन के लोकल बही खाता स्टोरेज में सुरक्षित हैं।')}
           </p>
         </div>
 
         {/* Dynamic header stats block */}
         <div className="mt-4 sm:mt-0 flex items-center space-x-3">
           <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-2xl text-right">
-            <span className="text-[9px] text-gray-400 block uppercase font-mono font-bold">कुल बकाया वसूली</span>
+            <span className="text-[9px] text-gray-400 block uppercase font-mono font-bold">{t('कुल बकाया वसूली')}</span>
             <span className="text-sm font-black text-red-400">
               ₹{totalReceivables.toLocaleString('en-IN')}
             </span>
@@ -240,7 +242,7 @@ export default function Clients() {
         </div>
 
         <span className="text-xs text-gray-450 font-black">
-          सक्रिय सूची: {filteredAndMappedClients.length} ग्राहक खाते
+          {t('सक्रिय सूची: ')} {filteredAndMappedClients.length} {t('ग्राहक खाते')}
         </span>
       </div>
 
@@ -284,14 +286,14 @@ export default function Clients() {
       {loading ? (
         <div className="bg-gray-900 border border-gray-800 rounded-3xl p-16 text-center shadow-lg">
           <div className="h-8 w-8 border-4 border-amber-500/25 border-t-amber-500 rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-xs text-gray-400 font-bold">ग्राहक बही लोड हो रही है...</p>
+          <p className="text-xs text-gray-400 font-bold">{t('ग्राहक बही लोड हो रही है...')}</p>
         </div>
       ) : filteredAndMappedClients.length === 0 ? (
         <div className="bg-gray-900/40 border border-dashed border-gray-800 rounded-3xl p-12 text-center text-gray-500 space-y-2">
           <Users className="h-10 w-10 text-gray-600 mx-auto" />
-          <h4 className="text-xs font-bold text-gray-300">कोई ग्राहक खाता नहीं मिला (No Results)</h4>
+          <h4 className="text-xs font-bold text-gray-300">{t('कोई ग्राहक खाता नहीं मिला (No Results)')}</h4>
           <p className="text-[10px] text-gray-550 max-w-sm mx-auto">
-            सर्च की जाँच करें या एक नया ग्राहक खाता खोलने के लिए नीचे दिए गए प्लस (+) बटन पर टैप करें।
+            {t('सर्च की जाँच करें या एक नया ग्राहक खाता खोलने के लिए नीचे दिए गए प्लस (+) बटन पर टैप करें।')}
           </p>
         </div>
       ) : (

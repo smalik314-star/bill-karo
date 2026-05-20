@@ -1,9 +1,11 @@
 import React from 'react';
 import useAppStore from '../store';
+import useTranslation from '../hooks/useTranslation';
 import { ShieldCheck, Award, Zap, Building, Clock } from 'lucide-react';
 
 export default function Header() {
   const { profile, subscription, setSubscription } = useAppStore();
+  const { t } = useTranslation();
 
   return (
     <header className="bg-[#0B0F1A] border-b border-gray-800 sticky top-0 z-50 px-4 py-3 shadow-md">
@@ -56,7 +58,7 @@ export default function Header() {
             }`}
           >
             <ShieldCheck className="h-2.5 w-2.5" />
-            <span>साल (₹1499)</span>
+            <span>{t('साल (₹1499)')}</span>
           </button>
         </div>
       </div>
@@ -66,13 +68,13 @@ export default function Header() {
         <div className="mt-2 text-center bg-amber-500/10 border border-amber-500/20 rounded py-1 px-2 flex items-center justify-between">
           <span className="text-[10px] text-amber-500 flex items-center font-medium">
             <Award className="h-3 w-3 mr-1 animate-pulse" />
-            Free Trial active. Cards may have watermark. Limit: 5 Client maximum.
+            {t('Free Trial active. Cards may have watermark. Limit: 5 Client maximum.')}
           </span>
           <button 
             onClick={() => setSubscription('PRO')}
             className="text-[9px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold hover:bg-amber-400"
           >
-            Upgrade Now
+            {t('Upgrade Now')}
           </button>
         </div>
       )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import useTranslation from '../../hooks/useTranslation';
 import { 
   LayoutDashboard, 
   Users, 
@@ -16,6 +17,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const { t } = useTranslation();
 
   const menuItems = [
     { id: 'dashboard', path: '/', label: 'डैशबोर्ड', sub: 'Home', icon: LayoutDashboard },
@@ -41,7 +43,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
             >
               <item.icon className={`h-5 w-5 mb-1 ${isActive ? 'stroke-[2.5px]' : 'stroke-[2px]'}`} />
               <span className="text-[9.5px] leading-tight block font-black truncate max-w-full">
-                {item.label}
+                {t(`${item.label} (${item.sub})`)}
               </span>
             </button>
           );
@@ -54,7 +56,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
         >
           <Menu className="h-5 w-5 mb-1 text-amber-500" />
           <span className="text-[9.5px] font-black leading-tight block">
-            अधिक (More)
+            {t('अधिक (More)')}
           </span>
         </button>
       </div>

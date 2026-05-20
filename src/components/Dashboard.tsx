@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAppStore from '../store';
 import { supabase } from '../lib/supabase';
+import useTranslation from '../hooks/useTranslation';
 import { 
   IndianRupee, 
   ArrowUpRight, 
@@ -30,6 +31,7 @@ interface DashboardProps {
 export default function Dashboard({ onNavigate }: DashboardProps) {
   // 1. Local Fallback State (Zustand Store)
   const store = useAppStore();
+  const { t } = useTranslation();
   
   // 2. State for Real-Time Supabase Sync
   const [supabaseMode, setSupabaseMode] = useState<boolean>(false);
@@ -258,10 +260,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <span className="text-[10px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">Ledger Dashboard</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans">
-            व्यापार का हिसाब-किताब
+            {t('व्यापार का हिसाब-किताब')}
           </h2>
-          <p className="text-xs text-gray-500">
-            {supabaseMode ? 'सारे बिल और भुगतान सुरक्षित क्लाउड डेटाबेस से सिंक हैं।' : 'लोकल बही खाता मोड सक्रिय है। इंटरनेट आने पर सुरक्षित हो जाएगा।'}
+          <p className="text-xs text-gray-550">
+            {supabaseMode ? t('सारे बिल और भुगतान सुरक्षित क्लाउड डेटाबेस से सिंक हैं।') : t('लोकल बही खाता मोड सक्रिय है। इंटरनेट आने पर सुरक्षित हो जाएगा।')}
           </p>
         </div>
 
@@ -275,12 +277,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             {supabaseMode ? (
               <>
                 <Cloud className="h-3 w-3 animate-pulse" />
-                <span>क्लाउड डेटा एक्टिव (Supabase Live)</span>
+                <span>{t('क्लाउड डेटा एक्टिव (Supabase Live)')}</span>
               </>
             ) : (
               <>
                 <CloudLightning className="h-3 w-3" />
-                <span>ऑफ़लाइन डेटा (Local Khata Only)</span>
+                <span>{t('ऑफ़लाइन डेटा (Local Khata Only)')}</span>
               </>
             )}
           </div>
@@ -291,7 +293,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* STAT 1: Total Pending Amount */}
         <div className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">कुल बकाया (Lena Baqi)</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('कुल बकाया (Lena Baqi)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={`text-xl font-black ${pendingAmount > 0 ? 'text-red-400' : 'text-gray-100'}`}>
               ₹{pendingAmount.toLocaleString('en-IN')}
@@ -300,14 +302,14 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <AlertCircle className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-500 block mt-1.5">
-            {pendingAmount > 0 ? '⚠️ वसूली बाकी है!' : 'कोई बकाया भुगतान नहीं है।'}
+          <span className="text-[9px] text-gray-550 block mt-1.5">
+            {pendingAmount > 0 ? t('⚠️ वसूली बाकी है!') : t('कोई बकाया भुगतान नहीं है।')}
           </span>
         </div>
 
         {/* STAT 2: Month Earning */}
         <div className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">महीने की कमाई (Income)</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('महीने की कमाई (Income)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className="text-xl font-black text-emerald-400">
               ₹{monthlyIncome.toLocaleString('en-IN')}
@@ -316,12 +318,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <TrendingUp className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-500 block mt-1.5">इस महीने आई कुल नगदी</span>
+          <span className="text-[9px] text-gray-550 block mt-1.5">{t('इस महीने आई कुल नगदी')}</span>
         </div>
 
         {/* STAT 3: Active Clients Count */}
         <div onClick={() => onNavigate('clients')} className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-amber-500/30 transition cursor-pointer">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">सक्रिय ग्राहक (Active)</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('सक्रिय ग्राहक (Active)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className="text-xl font-black text-amber-500">
               {activeClientsCount}
@@ -330,12 +332,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <Users className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-500 block mt-1.5">सारे ग्राहक खता सूची</span>
+          <span className="text-[9px] text-gray-550 block mt-1.5">{t('सारे ग्राहक खता सूची')}</span>
         </div>
 
         {/* STAT 4: Unpaid Invoices */}
         <div onClick={() => onNavigate('invoices')} className="bg-gray-900 rounded-2xl p-4.5 border border-gray-800 relative shadow-md group hover:border-cyan-500/30 transition cursor-pointer">
-          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">बाकी बिल (Unpaid Bills)</span>
+          <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('बाकी बिल (Unpaid Bills)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={`text-xl font-black ${unpaidInvoicesCount > 0 ? 'text-amber-500' : 'text-gray-300'}`}>
               {unpaidInvoicesCount}
@@ -344,13 +346,13 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <FileSpreadsheet className="h-4.5 w-4.5" />
             </div>
           </div>
-          <span className="text-[9px] text-gray-500 block mt-1.5">अधूरी/बाकी पेमेंट की संख्या</span>
+          <span className="text-[9px] text-gray-550 block mt-1.5">{t('अधूरी/बाकी पेमेंट की संख्या')}</span>
         </div>
       </div>
 
       {/* 3. QUICK ACTIONS BAR (Highly interactive shortcut buttons) */}
       <div>
-        <h3 className="text-[11px] font-black text-gray-400 mb-3 uppercase tracking-wider font-mono">त्वरित काम (Quick Actions)</h3>
+        <h3 className="text-[11px] font-black text-gray-400 mb-3 uppercase tracking-wider font-mono">{t('त्वरित काम (Quick Actions)')}</h3>
         <div className="grid grid-cols-3 gap-3">
           {/* Action A: Naya Client */}
           <button
@@ -360,8 +362,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <PlusCircle className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">नया ग्राहक</span>
-            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">Add Client</span>
+            <span className="text-xs font-black text-white block">{t('नया ग्राहक')}</span>
+            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">{t('Add Client')}</span>
           </button>
 
           {/* Action B: Naya Bill */}
@@ -372,8 +374,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <FileSpreadsheet className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">नया पक्का बिल</span>
-            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">Create Invoice</span>
+            <span className="text-xs font-black text-white block">{t('नया पक्का बिल')}</span>
+            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">{t('Create Invoice')}</span>
           </button>
 
           {/* Action C: Attendance */}
@@ -384,8 +386,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div className="h-10 w-10 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition">
               <CheckCircle2 className="h-5 w-5" />
             </div>
-            <span className="text-xs font-black text-white block">हाजिरी भरें</span>
-            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">Mark Attendance</span>
+            <span className="text-xs font-black text-white block">{t('हाजिरी भरें')}</span>
+            <span className="text-[8px] text-gray-500 block font-mono mt-0.5">{t('Mark Attendance')}</span>
           </button>
         </div>
       </div>

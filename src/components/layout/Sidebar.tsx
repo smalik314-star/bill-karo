@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAppStore } from '../../store';
+import useTranslation from '../../hooks/useTranslation';
 import { 
   LayoutDashboard, 
   Users, 
@@ -26,6 +27,7 @@ export default function Sidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const [collapsed, setCollapsed] = useState(false);
+  const { t } = useTranslation();
 
   const profile = useAppStore((state) => state.profile);
   const subscription = useAppStore((state) => state.subscription);
@@ -129,7 +131,7 @@ export default function Sidebar() {
             >
               <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-amber-500' : 'text-gray-500'}`} />
               {!collapsed && (
-                <span className="text-xs font-black truncate">{item.label}</span>
+                <span className="text-xs font-black truncate">{t(item.label)}</span>
               )}
             </button>
           );
@@ -144,7 +146,7 @@ export default function Sidebar() {
         >
           <LogOut className="h-4.5 w-4.5 text-red-500/70" />
           {!collapsed && (
-            <span className="text-xs font-black">लॉगआउट (Log Out)</span>
+            <span className="text-xs font-black">{t('लॉगआउट (Log Out)')}</span>
           )}
         </button>
       </div>
