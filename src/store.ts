@@ -72,132 +72,36 @@ interface AppState {
 }
 
 const DEFAULT_PROFILE: BusinessProfile = {
-  businessName: 'Aman Fabrication Works',
-  ownerName: 'Aman Sharma',
-  phone: '9876543210',
-  address: 'Sector 4, Phase 2, Industrial Area, Aligarh, Uttar Pradesh',
-  gstNumber: '09AABCU1234F1Z8',
-  isRegisteredGST: true,
-  bankName: 'State Bank of India',
-  accountNumber: '30245678901',
-  ifscCode: 'SBIN0005241',
-  upiId: 'amansharma@sbi',
-  signatureText: 'Aman Sharma'
+  businessName: '',
+  ownerName: '',
+  phone: '',
+  address: '',
+  gstNumber: '',
+  isRegisteredGST: false,
+  bankName: '',
+  accountNumber: '',
+  ifscCode: '',
+  upiId: '',
+  signatureText: ''
 };
 
-const INITIAL_CLIENTS: Client[] = [
-  { id: 'c1', name: 'Vijay Malhotra (Contractor)', phone: '9823456781', clientType: 'Contractor', totalDue: 15400, totalPaid: 45000 },
-  { id: 'c2', name: 'Ramesh Kirana Store Owner', phone: '9123456789', clientType: 'Regular', totalDue: 0, totalPaid: 12000 },
-  { id: 'c3', name: 'Gupta Builders Aligarh', phone: '8877665544', clientType: 'Supplier', totalDue: -8000, totalPaid: 25000 }
-];
+const INITIAL_CLIENTS: Client[] = [];
 
-const INITIAL_QUOTATIONS: Quotation[] = [
-  {
-    id: 'q1',
-    quoteNumber: 'EST-26-001',
-    clientId: 'c1',
-    date: '2026-05-18',
-    items: [
-      { name: 'Iron Grill Safety Gate', quantity: 2, unit: 'Pcs', rate: 4500, gstPercent: 18 },
-      { name: 'Welding Charges (Specialist)', quantity: 1, unit: 'LumpSum', rate: 1200, gstPercent: 0 }
-    ],
-    discount: 500,
-    notes: 'Material rates valid for 15 days only.',
-    isConverted: false,
-    validityDays: 15
-  },
-  {
-    id: 'q2',
-    quoteNumber: 'EST-26-002',
-    clientId: 'c2',
-    date: '2026-05-19',
-    items: [
-      { name: 'Stainless Steel Display Counter', quantity: 1, unit: 'Pcs', rate: 32000, gstPercent: 18 }
-    ],
-    discount: 2000,
-    notes: 'GST included. Delivery free within Aligarh.',
-    isConverted: true,
-    validityDays: 30
-  }
-];
+const INITIAL_QUOTATIONS: Quotation[] = [];
 
-const INITIAL_INVOICES: Invoice[] = [
-  {
-    id: 'i1',
-    invoiceNumber: 'INV-2026-001',
-    clientId: 'c1',
-    date: '2026-05-10',
-    dueDate: '2026-06-10',
-    items: [
-      { name: 'Metal Grating Shutter Plate', quantity: 4, unit: 'SqFt', rate: 4500, gstPercent: 18 }
-    ],
-    discount: 1000,
-    notes: 'Bahut dhanyawad kaam dene ke liye! Please bank transfer karein.',
-    isGstApplied: true,
-    totalAmount: 20060, // (4 * 4500 = 18000) - 1000 discount = 17000 + 18% GST (3060) = 20060
-    paidAmount: 15000,
-    status: 'Partial'
-  },
-  {
-    id: 'i2',
-    invoiceNumber: 'INV-2026-002',
-    clientId: 'c2',
-    date: '2026-05-14',
-    dueDate: '2026-05-30',
-    items: [
-      { name: 'Ramp Grill Installation', quantity: 1, unit: 'Job', rate: 12000, gstPercent: 0 }
-    ],
-    discount: 0,
-    notes: 'Please pay ASAP.',
-    isGstApplied: false,
-    totalAmount: 12000,
-    paidAmount: 12000,
-    status: 'Paid'
-  }
-];
+const INITIAL_INVOICES: Invoice[] = [];
 
-const INITIAL_PROP_CALCS: ProfitEstimate[] = [
-  { id: 'p1', projectName: 'Gupta Shed Work Aligarh', materialCost: 15000, labourCost: 4500, overheadCost: 1000, offeredPrice: 28000, date: '2026-05-15' },
-  { id: 'p2', projectName: 'Malhotra Staircase Grill', materialCost: 8000, labourCost: 2400, overheadCost: 500, offeredPrice: 14500, date: '2026-05-19' }
-];
+const INITIAL_PROP_CALCS: ProfitEstimate[] = [];
 
-const INITIAL_LABOUR: Labour[] = [
-  { id: 'l1', name: 'Rajesh Kumar (Welder)', dailyRate: 600, phone: '9234567801' },
-  { id: 'l2', name: 'Suresh Pal (Helper)', dailyRate: 450, phone: '9345678901' },
-  { id: 'l3', name: 'Manoj Yadav (Specialist)', dailyRate: 750, phone: '9456789012' }
-];
+const INITIAL_LABOUR: Labour[] = [];
 
-const INITIAL_ATTENDANCE: AttendanceRecord[] = [
-  { id: 'att1', labourId: 'l1', date: '2026-05-18', status: 'Present' },
-  { id: 'att2', labourId: 'l2', date: '2026-05-18', status: 'Present' },
-  { id: 'att3', labourId: 'l3', date: '2026-05-18', status: 'Absent' },
-  { id: 'att4', labourId: 'l1', date: '2026-05-19', status: 'Present' },
-  { id: 'att5', labourId: 'l2', date: '2026-05-19', status: 'HalfDay' },
-  { id: 'att6', labourId: 'l3', date: '2026-05-19', status: 'Present' },
-  { id: 'att7', labourId: 'l1', date: '2026-05-20', status: 'Present' },
-  { id: 'att8', labourId: 'l2', date: '2026-05-20', status: 'Present' },
-  { id: 'att9', labourId: 'l3', date: '2026-05-20', status: 'Present' }
-];
+const INITIAL_ATTENDANCE: AttendanceRecord[] = [];
 
-const INITIAL_TX: Transaction[] = [
-  { id: 'tx1', type: 'Expense', category: 'Tea & Snacks', amount: 450, date: '2026-05-19', notes: 'Evening tea for workers' },
-  { id: 'tx2', type: 'Expense', category: 'Welding Gas', amount: 3500, date: '2026-05-18', notes: 'Aligarh Gas Suppliers' },
-  { id: 'tx3', type: 'Expense', category: 'Electrodes & Screws', amount: 1200, date: '2026-05-17', notes: 'Loha Mandi Wholesale' },
-  { id: 'tx4', type: 'Income', category: 'Project Advance', amount: 15000, date: '2026-05-10', notes: 'Received advance Malhotra Site' },
-  { id: 'tx5', type: 'Income', category: 'Direct Client Cash', amount: 12000, date: '2026-05-14', notes: 'Ramp installation final payment' }
-];
+const INITIAL_TX: Transaction[] = [];
 
-const INITIAL_RECURRING: RecurringExpense[] = [
-  { id: 're1', name: 'Aligarh Workshop Kiraya (Rent)', amount: 10000, dueDate: '5th of every month', category: 'Rent', isPaidThisMonth: true },
-  { id: 're2', name: 'Power/Bijli Bill Works', amount: 4500, dueDate: '15th of every month', category: 'Electricity', isPaidThisMonth: false },
-  { id: 're3', name: 'Supervisor dihaadi fixed', amount: 15000, dueDate: '30th of every month', category: 'Salary', isPaidThisMonth: false }
-];
+const INITIAL_RECURRING: RecurringExpense[] = [];
 
-const INITIAL_INVENTORY: InventoryItem[] = [
-  { id: 'inv1', name: 'Saria Iron Rods (12mm)', category: 'Raw Materials', stockCount: 120, unit: 'Kg', minimumRequired: 50, purchasePrice: 65 },
-  { id: 'inv2', name: 'Welding Electrodes Stick Box', category: 'Consumables', stockCount: 8, unit: 'Box', minimumRequired: 15, purchasePrice: 280 },
-  { id: 'inv3', name: 'Zinc Spray Can (Anti-Rust)', category: 'Chemicals', stockCount: 15, unit: 'Pcs', minimumRequired: 5, purchasePrice: 320 }
-];
+const INITIAL_INVENTORY: InventoryItem[] = [];
 
 // Helper to load state safely or use default seed data
 const getStoredState = <T>(key: string, defaultValue: T): T => {
