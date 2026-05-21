@@ -16,23 +16,28 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const profile = useAppStore((state) => state.profile);
   const updateProfile = useAppStore((state) => state.updateProfile);
 
-  // Initialize from localStorage or fallback to profile
+  // 1. On app load — read language from localStorage first
+  // 2. If no localStorage value found — default to English
+  // 3. LanguageContext must initialize with the saved/default language
   const [language, setLanguageState] = useState<LanguageType>(() => {
     const stored = localStorage.getItem('billkaro_language');
     if (stored === 'Hindi' || stored === 'English' || stored === 'Hinglish') {
       return stored as LanguageType;
     }
-    return (profile.language || 'Hinglish') as LanguageType;
+    localStorage.setItem('billkaro_language', 'English');
+    return 'English';
   });
 
-  // Sync state if profile changes (e.g. initial load or cloud update)
+  // Persists the corrected state instantly and updates profile store to match
   useEffect(() => {
-    const profileLang = profile.language as LanguageType;
-    if (profileLang && profileLang !== language) {
-      setLanguageState(profileLang);
-      localStorage.setItem('billkaro_language', profileLang);
+    const stored = localStorage.getItem('billkaro_language');
+    if (stored !== language) {
+      localStorage.setItem('billkaro_language', language);
     }
-  }, [profile.language]);
+    if (profile.language !== language) {
+      updateProfile({ language });
+    }
+  }, [language, profile.language, updateProfile]);
 
   const setLanguage = (newLang: LanguageType) => {
     setLanguageState(newLang);
