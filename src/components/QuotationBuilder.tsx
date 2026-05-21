@@ -332,7 +332,7 @@ export default function QuotationBuilder() {
               </div>
 
               <div className="text-right ml-4">
-                <span className="text-xs font-extrabold text-white">₹{finalSum.toLocaleString('en-IN')}</span>
+                <span className="text-xs font-extrabold text-white">₹{(finalSum ?? 0).toLocaleString('en-IN')}</span>
                 <ChevronRight className="h-4 w-4 text-gray-500 block ml-auto mt-0.5" />
               </div>
             </div>
@@ -396,12 +396,12 @@ export default function QuotationBuilder() {
             <div className="bg-[#161B29] p-4 rounded-xl border border-gray-800 text-xs space-y-1">
               <div className="flex justify-between text-gray-400">
                 <span>Subtotal (कच्चा योग):</span>
-                <span>₹{calculateQuoteSubtotal(selectedQuoteDetail.items).toLocaleString('en-IN')}</span>
+                <span>₹{(calculateQuoteSubtotal(selectedQuoteDetail.items) ?? 0).toLocaleString('en-IN')}</span>
               </div>
               {calculateQuoteGst(selectedQuoteDetail.items) > 0 && (
                 <div className="flex justify-between text-gray-400">
                   <span>Estimated GST:</span>
-                  <span>₹{calculateQuoteGst(selectedQuoteDetail.items).toLocaleString('en-IN')}</span>
+                  <span>₹{(calculateQuoteGst(selectedQuoteDetail.items) ?? 0).toLocaleString('en-IN')}</span>
                 </div>
               )}
               {selectedQuoteDetail.discount > 0 && (
@@ -412,7 +412,7 @@ export default function QuotationBuilder() {
               )}
               <div className="flex justify-between border-t border-gray-800 pt-1.5 font-extrabold text-amber-500">
                 <span>ESTIMATE TOTAL:</span>
-                <span className="text-sm">₹{selectedQuoteDetail.finalSum.toLocaleString('en-IN')}</span>
+                <span className="text-sm">₹{(selectedQuoteDetail.finalSum ?? 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
 

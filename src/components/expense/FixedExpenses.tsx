@@ -235,7 +235,7 @@ export default function FixedExpenses({
                 <div className="text-right">
                   <span className="text-[8px] uppercase text-gray-400 block tracking-tight">Cost / Amount</span>
                   <span className="font-mono text-xs font-black text-rose-400">
-                    ₹{parseFloat(fe.amount || 0).toLocaleString('en-IN')}
+                    ₹{(parseFloat(fe.amount?.toString() || '0') ?? 0).toLocaleString('en-IN')}
                   </span>
                 </div>
 

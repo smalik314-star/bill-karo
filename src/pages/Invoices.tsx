@@ -220,7 +220,7 @@ export default function Invoices() {
               <div className="space-y-1">
                 <span className="text-[10px] text-amber-500 font-extrabold block uppercase font-mono tracking-wider">कुल बकाया बैलेंस (Due)</span>
                 <span className="text-lg sm:text-2xl font-black text-amber-400 block font-mono">
-                  ₹{totalOutstanding.toLocaleString('en-IN')}
+                  ₹{(totalOutstanding ?? 0).toLocaleString('en-IN')}
                 </span>
                 <span className="text-[9.5px] text-gray-500 block">Collect balance immediately</span>
               </div>
@@ -234,7 +234,7 @@ export default function Invoices() {
               <div className="space-y-1">
                 <span className="text-[10px] text-emerald-500 font-extrabold block uppercase font-mono tracking-wider">प्राप्त जमा राशि (Collected)</span>
                 <span className="text-lg sm:text-2xl font-black text-emerald-400 block font-mono">
-                  ₹{totalCollected.toLocaleString('en-IN')}
+                  ₹{(totalCollected ?? 0).toLocaleString('en-IN')}
                 </span>
                 <span className="text-[9.5px] text-gray-550 block">Successfully credited in bank/cash</span>
               </div>
@@ -248,7 +248,7 @@ export default function Invoices() {
               <div className="space-y-1">
                 <span className="text-[10px] text-gray-450 block uppercase font-mono tracking-wider font-extrabold">कुल बिकवाली योग (Turnover)</span>
                 <span className="text-lg sm:text-2xl font-black text-white block font-mono">
-                  ₹{totalBilling.toLocaleString('en-IN')}
+                  ₹{(totalBilling ?? 0).toLocaleString('en-IN')}
                 </span>
                 <span className="text-[9.5px] text-gray-500 block">All-time billing volume</span>
               </div>
@@ -415,14 +415,14 @@ export default function Invoices() {
                           {/* Financier totals */}
                           <td className="py-4 text-right pr-4 leading-tight font-mono">
                             <div className="text-[12.5px] font-black text-white">
-                              ₹{inv.totalAmount.toLocaleString('en-IN')}
+                              ₹{(inv.totalAmount ?? 0).toLocaleString('en-IN')}
                             </div>
                             <div className="text-[10px] text-emerald-500">
-                              प्राप्त: ₹{inv.paidAmount.toLocaleString('en-IN')}
+                              प्राप्त: ₹{(inv.paidAmount ?? 0).toLocaleString('en-IN')}
                             </div>
                             {balanceRemaining > 0 && (
                               <div className="text-[10px] text-amber-500">
-                                बकाया: ₹{balanceRemaining.toLocaleString('en-IN')}
+                                बकाया: ₹{(balanceRemaining ?? 0).toLocaleString('en-IN')}
                               </div>
                             )}
                           </td>

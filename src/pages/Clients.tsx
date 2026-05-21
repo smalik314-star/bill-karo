@@ -207,7 +207,7 @@ export default function Clients() {
           <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-2xl text-right">
             <span className="text-[9px] text-gray-400 block uppercase font-mono font-bold">{t('कुल बकाया वसूली')}</span>
             <span className="text-sm font-black text-red-400">
-              ₹{totalReceivables.toLocaleString('en-IN')}
+              ₹{(totalReceivables ?? 0).toLocaleString('en-IN')}
             </span>
           </div>
 

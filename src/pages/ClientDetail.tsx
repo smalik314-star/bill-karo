@@ -420,7 +420,7 @@ export default function ClientDetail() {
             <div className="bg-[#0B0F1A]/70 border border-gray-850 p-4.5 rounded-2xl min-w-[200px] text-right flex flex-col justify-center">
               <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono block">कुल बकाया खाता (A/C Due)</span>
               <span className={`text-xl font-black block mt-1 ${netOutstandingBalance > 0 ? 'text-rose-400' : 'text-emerald-400'}`}>
-                ₹{netOutstandingBalance.toLocaleString('en-IN')}
+                ₹{(netOutstandingBalance ?? 0).toLocaleString('en-IN')}
               </span>
               <span className="text-[9px] text-gray-500 block mt-1 leading-none italic">
                 {netOutstandingBalance > 0 ? '⚠️ वसूली मिलनी बाकी है!' : 'लेनदेन पूरा हो चूका है'}
@@ -539,9 +539,9 @@ export default function ClientDetail() {
 
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
-                      <span className="text-xs font-black text-white block">₹{finalAmt.toLocaleString('en-IN')}</span>
+                      <span className="text-xs font-black text-white block">₹{(finalAmt ?? 0).toLocaleString('en-IN')}</span>
                       {finalAmt - paidSum > 0 && (
-                        <span className="text-[9px] text-rose-450 block font-bold mt-0.5">₹{(finalAmt - paidSum).toLocaleString('en-IN')} Due</span>
+                        <span className="text-[9px] text-rose-450 block font-bold mt-0.5">₹{((finalAmt ?? 0) - (paidSum ?? 0)).toLocaleString('en-IN')} Due</span>
                       )}
                     </div>
 
@@ -594,7 +594,7 @@ export default function ClientDetail() {
 
                   <div className="flex items-center space-x-4">
                     <span className="text-xs font-black text-white">
-                      ₹{qAmt.toLocaleString('en-IN')}
+                      ₹{(qAmt ?? 0).toLocaleString('en-IN')}
                     </span>
 
                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-[8.5px] font-black uppercase tracking-wider ${qStatColor}`}>

@@ -53,7 +53,7 @@ export default function ClientBreakdown({
           </h3>
         </div>
         <span className="text-[10px] text-gray-400 font-bold border border-gray-800 px-2.5 py-1 rounded-xl bg-gray-950 font-mono">
-          Total Month Sales: ₹{grandTotalMonthSales.toLocaleString('en-IN')}
+          Total Month Sales: ₹{(grandTotalMonthSales ?? 0).toLocaleString('en-IN')}
         </span>
       </div>
 
@@ -87,7 +87,7 @@ export default function ClientBreakdown({
                 <div className="text-left sm:text-right font-mono">
                   <span className="text-[8.5px] text-gray-400 uppercase font-black block tracking-tight">Income Volume</span>
                   <span className="text-xs font-black text-emerald-400">
-                    ₹{c.salesVolume.toLocaleString('en-IN')}
+                    ₹{(c.salesVolume ?? 0).toLocaleString('en-IN')}
                   </span>
                 </div>
               </div>
@@ -98,14 +98,14 @@ export default function ClientBreakdown({
                   <span className="text-gray-450 flex items-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" /> Received
                   </span>
-                  <span className="text-emerald-400 font-bold">₹{c.amountPaid.toLocaleString('en-IN')} ({paidPercentage}%)</span>
+                  <span className="text-emerald-400 font-bold">₹{(c.amountPaid ?? 0).toLocaleString('en-IN')} ({paidPercentage}%)</span>
                 </div>
 
                 <div className="flex justify-between items-center pl-1">
                   <span className="text-gray-450 flex items-center">
                     <span className="h-1.5 w-1.5 rounded-full bg-rose-500 mr-1.5" /> Pending
                   </span>
-                  <span className="text-rose-400 font-bold">₹{c.pendingDue.toLocaleString('en-IN')}</span>
+                  <span className="text-rose-400 font-bold">₹{(c.pendingDue ?? 0).toLocaleString('en-IN')}</span>
                 </div>
               </div>
 

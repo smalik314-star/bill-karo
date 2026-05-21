@@ -31,7 +31,7 @@ interface MonthlyReportPDFData {
  * Format helper for Currency standard Indian numbering format
  */
 function formatRupees(amount: number = 0): string {
-  return '₹' + amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return '₹' + (amount ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 /**
@@ -199,14 +199,14 @@ export function generateInvoicePDF(data: InvoicePDFData): jsPDF {
 
     doc.text(item.hsn || '-', 88, currentY + 5);
     doc.text(`${item.quantity} ${item.unit || 'Kg'}`, 106, currentY + 5);
-    doc.text(item.rate.toLocaleString('en-IN'), 123, currentY + 5);
+    doc.text((item.rate ?? 0).toLocaleString('en-IN'), 123, currentY + 5);
 
     if (invoice.isGstApplied) {
       doc.text(`${item.gstPercent || 0}%`, 147, currentY + 5);
     }
     
     const finalRowTotal = itemTotal + itemGst;
-    doc.text(finalRowTotal.toLocaleString('en-IN', { minimumFractionDigits: 1 }), 172, currentY + 5);
+    doc.text((finalRowTotal ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 1 }), 172, currentY + 5);
 
     // separator lines
     currentY += 8 + linesOffset;

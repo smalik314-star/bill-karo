@@ -212,17 +212,17 @@ export default function SalarySummary({
                   <div className="grid grid-cols-3 gap-3 text-right">
                     <div className="text-left sm:text-right">
                       <span className="text-[8px] uppercase text-gray-400 block tracking-tight">Total Earned</span>
-                      <span className="font-mono text-xs text-white font-black">₹{worker.totalSalaryEarned.toLocaleString('en-IN')}</span>
+                      <span className="font-mono text-xs text-white font-black">₹{(worker.totalSalaryEarned ?? 0).toLocaleString('en-IN')}</span>
                     </div>
 
                     <div className="text-left sm:text-right">
                       <span className="text-[8px] uppercase text-gray-400 block tracking-tight">Total Paid</span>
-                      <span className="font-mono text-xs text-emerald-400 font-black">₹{worker.totalPaid.toLocaleString('en-IN')}</span>
+                      <span className="font-mono text-xs text-emerald-400 font-black">₹{(worker.totalPaid ?? 0).toLocaleString('en-IN')}</span>
                     </div>
 
                     <div className="text-left sm:text-right">
                       <span className="text-[8px] uppercase text-gray-400 block tracking-tight">Net Pending</span>
-                      <span className="font-mono text-xs text-rose-400 font-black">₹{worker.balancePending.toLocaleString('en-IN')}</span>
+                      <span className="font-mono text-xs text-rose-400 font-black">₹{(worker.balancePending ?? 0).toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 
@@ -267,17 +267,17 @@ export default function SalarySummary({
 
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
                   <span className="text-[8.5px] uppercase text-gray-400 block font-bold">कुल वेतन बना (Gross Payroll)</span>
-                  <span className="text-lg font-black font-mono text-amber-450 mt-0.5 block">₹{grandTotalEarned.toLocaleString('en-IN')}</span>
+                  <span className="text-lg font-black font-mono text-amber-450 mt-0.5 block">₹{(grandTotalEarned ?? 0).toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
                   <span className="text-[8.5px] uppercase text-gray-400 block font-bold">कुल भुगतान हुआ (Gross Paid)</span>
-                  <span className="text-lg font-black font-mono text-emerald-400 mt-0.5 block">₹{grandTotalPaid.toLocaleString('en-IN')}</span>
+                  <span className="text-lg font-black font-mono text-emerald-400 mt-0.5 block">₹{(grandTotalPaid ?? 0).toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="bg-[#0B0F1A] p-2.5 rounded-xl border border-gray-850">
                   <span className="text-[8.5px] uppercase text-gray-400 block font-bold">शेष भुगतान लंबित (Outstanding Due)</span>
-                  <span className="text-lg font-black font-mono text-[#F43F5E] mt-0.5 block">₹{grandTotalPending.toLocaleString('en-IN')}</span>
+                  <span className="text-lg font-black font-mono text-[#F43F5E] mt-0.5 block">₹{(grandTotalPending ?? 0).toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
@@ -320,7 +320,7 @@ export default function SalarySummary({
                 </div>
 
                 <div className="text-right font-mono text-xs font-black text-emerald-400">
-                  + ₹{parseFloat(p.amount || 0).toLocaleString('en-IN')}
+                  + ₹{(parseFloat(p.amount || 0) ?? 0).toLocaleString('en-IN')}
                 </div>
               </div>
             );
@@ -369,15 +369,15 @@ export default function SalarySummary({
               </div>
               <div className="flex justify-between text-gray-450">
                 <span>कुल कमाया:</span>
-                <span>₹{selectedWorker.totalSalaryEarned.toLocaleString('en-IN')}</span>
+                <span>₹{(selectedWorker.totalSalaryEarned ?? 0).toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-gray-450 border-b border-gray-850 pb-1.5">
                 <span>पहले चुकाया:</span>
-                <span className="text-emerald-400">₹{selectedWorker.totalPaid.toLocaleString('en-IN')}</span>
+                <span className="text-emerald-400">₹{(selectedWorker.totalPaid ?? 0).toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-rose-400 font-extrabold pt-1.5">
                 <span>Outstanding Balance:</span>
-                <span className="text-xs">₹{selectedWorker.balancePending.toLocaleString('en-IN')}</span>
+                <span className="text-xs">₹{(selectedWorker.balancePending ?? 0).toLocaleString('en-IN')}</span>
               </div>
             </div>
 

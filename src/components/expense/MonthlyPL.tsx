@@ -114,7 +114,7 @@ export default function MonthlyPL({
               कुल आमदानी (Total Income)
             </span>
             <span className="text-lg font-black font-mono text-emerald-400">
-              ₹{totalIncome.toLocaleString('en-IN')}
+              ₹{(totalIncome ?? 0).toLocaleString('en-IN')}
             </span>
             <span className="text-[9.5px] text-gray-500 block">
               {monthlyInvoices.length} इनवॉइस से सिंक किया गया
@@ -132,7 +132,7 @@ export default function MonthlyPL({
               कुल खर्चे (Total Expense)
             </span>
             <span className="text-lg font-black font-mono text-rose-400">
-              ₹{totalExpense.toLocaleString('en-IN')}
+              ₹{(totalExpense ?? 0).toLocaleString('en-IN')}
             </span>
             <span className="text-[9.5px] text-gray-500 block">
               Direct {monthlyExpenses.length} + Fixed {paidFixedExpenses.length} Paid
@@ -150,7 +150,7 @@ export default function MonthlyPL({
               शुद्ध मुनाफा (Net Profit)
             </span>
             <span className={`text-xl font-black font-mono ${netProfit >= 0 ? 'text-amber-400' : 'text-rose-500'}`}>
-              {netProfit < 0 ? '-' : ''}₹{Math.abs(netProfit).toLocaleString('en-IN')}
+              {(netProfit ?? 0) < 0 ? '-' : ''}₹{Math.abs(netProfit ?? 0).toLocaleString('en-IN')}
             </span>
             <span className="text-[9.5px] text-gray-500 block">
               {netProfit >= 0 ? '🟢 फ़ायदे में हैं आप!' : '🔴 बजट से ज़्यादा खर्च हुआ'}
@@ -206,9 +206,9 @@ export default function MonthlyPL({
 
           <div className="text-[10px] text-gray-450 leading-relaxed mt-3.5 text-center">
             {totalIncome > totalExpense ? (
-              <span>📈 आपकी आमदनी खर्चे से <b className="text-emerald-400">₹{(totalIncome - totalExpense).toLocaleString('en-IN')}</b> अधिक है!</span>
+              <span>📈 आपकी आमदनी खर्चे से <b className="text-emerald-400">₹{((totalIncome ?? 0) - (totalExpense ?? 0)).toLocaleString('en-IN')}</b> अधिक है!</span>
             ) : totalExpense > totalIncome ? (
-              <span>⚠️ चेतावनी: इस महीने खर्चे आमदनी से <b className="text-rose-400">₹{(totalExpense - totalIncome).toLocaleString('en-IN')}</b> अधिक हैं!</span>
+              <span>⚠️ चेतावनी: इस महीने खर्चे आमदनी से <b className="text-rose-400">₹{((totalExpense ?? 0) - (totalIncome ?? 0)).toLocaleString('en-IN')}</b> अधिक हैं!</span>
             ) : (
               <span>🤝 इस महीने का आय और व्यय पूर्ण रूप से संतुलित है।</span>
             )}
@@ -241,7 +241,7 @@ export default function MonthlyPL({
                        '📦 Other (अन्य ख़र्चे)'}
                     </span>
                     <span className="font-mono font-black text-white">
-                      ₹{val.toLocaleString('en-IN')} <span className="text-gray-500 text-[9px]">({sharePercent}%)</span>
+                      ₹{(val ?? 0).toLocaleString('en-IN')} <span className="text-gray-500 text-[9px]">({sharePercent}%)</span>
                     </span>
                   </div>
 

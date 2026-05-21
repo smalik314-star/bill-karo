@@ -84,7 +84,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
             {finalDue > 0 ? 'बाकी भुगतान' : finalDue < 0 ? 'सुरक्षित जमा' : 'लेनदेन ख़त्म'}
           </span>
           <span className={`text-sm font-black ${finalDue > 0 ? 'text-rose-400' : finalDue < 0 ? 'text-purple-400' : 'text-gray-400'}`}>
-            {finalDue === 0 ? '₹0' : '₹' + Math.abs(finalDue).toLocaleString('en-IN')}
+            {(finalDue ?? 0) === 0 ? '₹0' : '₹' + Math.abs(finalDue ?? 0).toLocaleString('en-IN')}
           </span>
         </div>
       </div>

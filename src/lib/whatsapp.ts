@@ -34,7 +34,7 @@ export function shareInvoice(
 
   // Calculate items lines safely
   const itemLinesStr = (invoice.items || []).map((it, idx) => 
-    `🔹 ${idx + 1}. *${it.name}* (Qty: ${it.quantity} ${it.unit}) ${it.hsn ? `[HSN ${it.hsn}]` : ''} - ₹${(it.rate * it.quantity).toLocaleString('en-IN')}`
+    `🔹 ${idx + 1}. *${it.name}* (Qty: ${it.quantity} ${it.unit}) ${it.hsn ? `[HSN ${it.hsn}]` : ''} - ₹${((it.rate ?? 0) * (it.quantity ?? 0)).toLocaleString('en-IN')}`
   ).join('\n');
 
   // Compute values
@@ -68,13 +68,13 @@ export function shareInvoice(
 ${itemLinesStr || 'कोई आइटम नहीं'}
 
 *वित्तीय विवरणी (Financial Summary):*
-🔸 उप-योग (Subtotal): ₹${subtotal.toLocaleString('en-IN')}
-${invoice.isGstApplied ? `🔸 जीएसटी टैक्स (GST): ₹${totalGst.toLocaleString('en-IN')}` : ''}
-🔸 छूट (Discount): ₹${discount.toLocaleString('en-IN')}
-🌟 *कुल देय राशि (Grand Total): ₹${grandTotal.toLocaleString('en-IN')}*
+🔸 उप-योग (Subtotal): ₹${(subtotal ?? 0).toLocaleString('en-IN')}
+${invoice.isGstApplied ? `🔸 जीएसटी टैक्स (GST): ₹${(totalGst ?? 0).toLocaleString('en-IN')}` : ''}
+🔸 छूट (Discount): ₹${(discount ?? 0).toLocaleString('en-IN')}
+🌟 *कुल देय राशि (Grand Total): ₹${(grandTotal ?? 0).toLocaleString('en-IN')}*
 
-💸 *कुल प्राप्त जमा (Paid amount):* ₹${(invoice.paidAmount || 0).toLocaleString('en-IN')}
-⚠️ *बकाया शेष मूल्य (Due Balance):* *₹${outstanding.toLocaleString('en-IN')}*
+💸 *कुल प्राप्त जमा (Paid amount):* ₹${(invoice.paidAmount ?? 0).toLocaleString('en-IN')}
+⚠️ *बकाया शेष मूल्य (Due Balance):* *₹{(outstanding ?? 0).toLocaleString('en-IN')}*
 
 -----------------------------------
 ${profile?.bankName ? `🏦 *बैंक विवरण भुगतान के लिए (Bank Ledger):*
@@ -115,7 +115,7 @@ export function shareQuotation(
   const bizName = profile?.businessName || 'BillKaro Merchant';
 
   const itemLinesStr = (quotation.items || []).map((it, idx) => 
-    `🔸 ${idx + 1}. *${it.name}* (Qty: ${it.quantity} ${it.unit}) - ₹${(it.rate * it.quantity).toLocaleString('en-IN')}`
+    `🔸 ${idx + 1}. *${it.name}* (Qty: ${it.quantity} ${it.unit}) - ₹${((it.rate ?? 0) * (it.quantity ?? 0)).toLocaleString('en-IN')}`
   ).join('\n');
 
   const subtotal = (quotation.items || []).reduce((sum, item) => sum + (item.rate * item.quantity), 0);
@@ -138,9 +138,9 @@ export function shareQuotation(
 ${itemLinesStr || 'कोई आइटम नहीं'}
 
 *वित्तीय सारांश (Financial Summary):*
-🔹 कुल मूल्य (Total): ₹${subtotal.toLocaleString('en-IN')}
-🔹 विशेष छूट (Discount): ₹${discount.toLocaleString('en-IN')}
-🌟 *अनुमानित कुल लागत (Estimated Cost): ₹${grandTotal.toLocaleString('en-IN')}*
+🔹 कुल मूल्य (Total): ₹${(subtotal ?? 0).toLocaleString('en-IN')}
+🔹 विशेष छूट (Discount): ₹{(discount ?? 0).toLocaleString('en-IN')}
+🌟 *अनुमानित कुल लागत (Estimated Cost): ₹{(grandTotal ?? 0).toLocaleString('en-IN')}*
 
 -----------------------------------
 *नियम एवं शर्तें (Terms):*
@@ -191,7 +191,7 @@ export function shareReceipt(
 💳 *भुगतान का माध्यम (Mode):* ${payment.mode}
 📄 *इनवॉइस संदर्भ (Invoice Ref):* ${invNum}
 
-💰 *प्राप्त जमा राशि (Amount Received):* *₹${payment.amount.toLocaleString('en-IN')}*
+💰 *प्राप्त जमा राशि (Amount Received):* *₹{(payment.amount ?? 0).toLocaleString('en-IN')}*
 ${payment.notes ? `📝 *टिप्पणी (Notes):* ${payment.notes}` : ''}
 
 आपके सहयोग हेतु कोटि-कोटि धन्यवाद! हम आपके समृद्ध भविष्य की कामना करते हैं।

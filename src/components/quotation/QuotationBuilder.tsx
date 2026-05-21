@@ -317,7 +317,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
                         <span className="text-[10px] text-gray-500">Service Estimate @ Lumpsum Rate</span>
                       </td>
                       <td className="py-2 text-right pr-4 font-black font-mono text-gray-200">
-                        ₹{item.rate.toLocaleString('en-IN')}
+                        ₹{(item.rate ?? 0).toLocaleString('en-IN')}
                       </td>
                       <td className="py-2 text-center">
                         <button 
@@ -460,7 +460,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
               <span className="text-gray-500 text-[10px] block uppercase font-mono">कुल योग (Subtotal)</span>
               <span className="text-sm font-extrabold text-white mt-1 block">
-                ₹{subtotal.toLocaleString('en-IN')}
+                ₹{(subtotal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -468,7 +468,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
               <span className="text-gray-500 text-[10px] block uppercase font-mono">छूट (Discount)</span>
               <span className="text-sm font-extrabold text-rose-400 mt-1 block">
-                - ₹{discountVal.toLocaleString('en-IN')}
+                - ₹{(discountVal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -476,7 +476,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
               <span className="text-gray-500 text-[10px] block uppercase font-mono">सुरक्षित एडवांस ({advanceMode})</span>
               <span className="text-sm font-extrabold text-emerald-400 mt-1 block">
-                ₹{advanceVal.toLocaleString('en-IN')}
+                ₹{(advanceVal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -484,7 +484,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             <div className="p-3 bg-[#241E15] rounded-xl border border-amber-500/30">
               <span className="text-amber-500 text-[10.5px] block uppercase font-mono font-black">अंतिम देय राशि (Balance)</span>
               <span className="text-[15px] font-black text-amber-400 mt-0.5 block font-mono">
-                ₹{balanceOutstanding.toLocaleString('en-IN')}
+                ₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
           </div>

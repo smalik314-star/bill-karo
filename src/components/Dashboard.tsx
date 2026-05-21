@@ -296,7 +296,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('कुल बकाया (Lena Baqi)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className={`text-xl font-black ${pendingAmount > 0 ? 'text-red-400' : 'text-gray-100'}`}>
-              ₹{pendingAmount.toLocaleString('en-IN')}
+              ₹{(pendingAmount ?? 0).toLocaleString('en-IN')}
             </span>
             <div className={`p-1.5 rounded-xl ${pendingAmount > 0 ? 'bg-red-500/10 text-red-400' : 'bg-gray-800 text-gray-500'}`}>
               <AlertCircle className="h-4.5 w-4.5" />
@@ -312,7 +312,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           <span className="text-[10px] text-gray-400 block font-bold uppercase tracking-wider">{t('महीने की कमाई (Income)')}</span>
           <div className="flex items-center justify-between mt-1.5">
             <span className="text-xl font-black text-emerald-400">
-              ₹{monthlyIncome.toLocaleString('en-IN')}
+              ₹{(monthlyIncome ?? 0).toLocaleString('en-IN')}
             </span>
             <div className="p-1.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
               <TrendingUp className="h-4.5 w-4.5" />
@@ -467,7 +467,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
                   <div className="flex items-center space-x-3 text-right">
                     <span className="text-xs font-black text-white">
-                      ₹{inv.grandTotal.toLocaleString('en-IN')}
+                      ₹{(inv.grandTotal ?? 0).toLocaleString('en-IN')}
                     </span>
 
                     {/* Highly visible STATUS TRAFFIC LIGHT PILL */}

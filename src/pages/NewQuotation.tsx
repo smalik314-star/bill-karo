@@ -178,7 +178,7 @@ export default function NewQuotation() {
             <div className="space-y-1">
               <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold font-sans">अनुमानित कुल शेष मूल्य</span>
               <span className="text-xl font-black text-rose-400 block">
-                ₹{totalValuePendingSum.toLocaleString('en-IN')}
+                ₹{(totalValuePendingSum ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
             <div className="p-3 bg-rose-500/5 border border-rose-500/15 rounded-xl text-rose-400">
@@ -191,7 +191,7 @@ export default function NewQuotation() {
             <div className="space-y-1">
               <span className="text-[9.5px] text-gray-500 uppercase tracking-widest font-bold font-sans">पक्के बिल में कन्वर्टेड मूल्य</span>
               <span className="text-xl font-black text-emerald-400 block">
-                ₹{convertedValueSum.toLocaleString('en-IN')}
+                ₹{(convertedValueSum ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
             <div className="p-3 bg-emerald-500/5 border border-emerald-500/15 rounded-xl text-emerald-400">
@@ -320,7 +320,7 @@ export default function NewQuotation() {
                       <div className="text-right shrink-0">
                         <span className="text-[9px] text-gray-550 block font-bold font-mono">EST TOTAL</span>
                         <span className="text-[13.5px] font-black text-white">
-                          ₹{finalSum.toLocaleString('en-IN')}
+                          ₹{(finalSum ?? 0).toLocaleString('en-IN')}
                         </span>
                       </div>
                     </div>
@@ -345,7 +345,7 @@ export default function NewQuotation() {
                         <div className="flex items-center justify-between text-gray-400">
                           <span>प्राप्त एडवांस राशि ({quote.advanceMode}):</span>
                           <span className="text-emerald-400 font-bold">
-                            ₹{quote.advanceAmount.toLocaleString('en-IN')}
+                            ₹{(quote.advanceAmount ?? 0).toLocaleString('en-IN')}
                           </span>
                         </div>
                       ) : null}
@@ -354,7 +354,7 @@ export default function NewQuotation() {
                         <div className="flex items-center justify-between text-[11.5px] border-t border-gray-850/40 pt-1 mt-1 font-bold">
                           <span className="text-amber-500">बकाया बैलेंस (Balance Due):</span>
                           <span className="text-amber-400">
-                            ₹{(finalSum - quote.advanceAmount).toLocaleString('en-IN')}
+                            ₹{((finalSum ?? 0) - (quote.advanceAmount ?? 0)).toLocaleString('en-IN')}
                           </span>
                         </div>
                       ) : null}

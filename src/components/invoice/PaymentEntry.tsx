@@ -108,7 +108,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
         notes: `Kaat ke jama (Payment) for Invoice #${invoice.invoiceNumber}. Receipt No: ${recNumber} by ${clientName}`
       });
 
-      toast.success(`भुगतान ₹${amountVal.toLocaleString('en-IN')} सफलतापूर्वक दर्ज हुआ!`);
+      toast.success(`भुगतान ₹{(amountVal ?? 0).toLocaleString('en-IN')} सफलतापूर्वक दर्ज हुआ!`);
       
       // Set to view receipt instantly
       setSelectedReceipt(newPayment);
@@ -124,7 +124,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
 
   // Convert number to words roughly (English/Hindi display)
   const formatAmountInWords = (num: number) => {
-    return `${num.toLocaleString('en-IN')} Rupees Only`;
+    return `${(num ?? 0).toLocaleString('en-IN')} Rupees Only`;
   };
 
   // PDF Generator for Receipt
@@ -197,15 +197,15 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
           <div className="grid grid-cols-3 gap-2.5 bg-gray-950 p-4 rounded-2xl border border-gray-850 text-center">
             <div>
               <span className="text-[9px] text-gray-500 block uppercase font-mono">कुल बिल राशि</span>
-              <span className="text-[13px] font-black text-white">₹{invoice.totalAmount.toLocaleString('en-IN')}</span>
+              <span className="text-[13px] font-black text-white">₹{(invoice.totalAmount ?? 0).toLocaleString('en-IN')}</span>
             </div>
             <div>
               <span className="text-[9px] text-gray-500 block uppercase font-mono">प्राप्त जमा</span>
-              <span className="text-[13px] font-black text-emerald-400">₹{invoice.paidAmount.toLocaleString('en-IN')}</span>
+              <span className="text-[13px] font-black text-emerald-400">₹{(invoice.paidAmount ?? 0).toLocaleString('en-IN')}</span>
             </div>
             <div>
               <span className="text-[9px] text-amber-500 block uppercase font-mono font-bold">शेष बकाया</span>
-              <span className="text-[13px] font-black text-amber-400">₹{pendingAmount.toLocaleString('en-IN')}</span>
+              <span className="text-[13px] font-black text-amber-400">₹{(pendingAmount ?? 0).toLocaleString('en-IN')}</span>
             </div>
           </div>
 
@@ -321,7 +321,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
                       </div>
                       <div className="text-xs">
                         <div className="flex items-center space-x-1.5">
-                          <span className="font-extrabold text-white">₹{p.amount.toLocaleString('en-IN')}</span>
+                          <span className="font-extrabold text-white">₹{(p.amount ?? 0).toLocaleString('en-IN')}</span>
                           <span className="bg-gray-900 border border-gray-800 px-1.5 py-0.2 rounded text-[9px] font-mono text-gray-450 uppercase">{p.mode}</span>
                         </div>
                         <div className="text-[10px] text-gray-500 font-mono mt-0.5">
@@ -430,7 +430,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
                   {/* Cash collected central callout block */}
                   <div className="my-4 bg-emerald-50/50 border border-emerald-500/10 rounded-xl p-3.5 text-center">
                     <span className="text-[9px] text-emerald-800 block uppercase font-mono tracking-wider font-extrabold">प्राप्त भुगतान (Amount Paid)</span>
-                    <span className="text-xl font-black text-emerald-700 block font-mono mt-0.5">₹{selectedReceipt.amount.toLocaleString('en-IN')}</span>
+                    <span className="text-xl font-black text-emerald-700 block font-mono mt-0.5">₹{(selectedReceipt.amount ?? 0).toLocaleString('en-IN')}</span>
                     <span className="text-[9px] text-gray-550 font-sans mt-1 block italic">{formatAmountInWords(selectedReceipt.amount)}</span>
                   </div>
 
@@ -438,11 +438,11 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
                   <div className="space-y-1.5 text-[9.5px] text-gray-650 bg-gray-50 p-2.5 rounded-lg border border-gray-100 font-mono">
                     <div className="flex justify-between">
                       <span>कुल इनवॉइस योग:</span>
-                      <span>₹{invoice.totalAmount.toLocaleString('en-IN')}</span>
+                      <span>₹{(invoice.totalAmount ?? 0).toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between border-t border-gray-200/40 pt-1 font-bold text-gray-900">
                       <span>बकाया शेष (Outstanding):</span>
-                      <span className="text-amber-800">₹{(invoice.totalAmount - (selectedReceipt.amount + (invoice.payments?.filter(p => p.id !== selectedReceipt.id).reduce((s, p) => s + p.amount, 0) || 0))).toLocaleString('en-IN')}</span>
+                      <span className="text-amber-800">₹{((invoice.totalAmount ?? 0) - ((selectedReceipt.amount ?? 0) + (invoice.payments?.filter(p => p.id !== selectedReceipt.id).reduce((s, p) => s + (p.amount ?? 0), 0) || 0))).toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 

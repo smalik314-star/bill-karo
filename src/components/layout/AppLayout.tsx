@@ -33,26 +33,29 @@ export default function AppLayout({ children }: AppLayoutProps) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
-      
-      // Redirect to login if user is not authorized and trying to visit protected pages
-      if (!session && location.pathname !== '/signin' && location.pathname !== '/signup') {
-        navigate('/signin');
-      }
     });
 
     // 2. Listen for active subscription/auth mutations
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setLoading(false);
-      if (!session && location.pathname !== '/signin' && location.pathname !== '/signup') {
-        navigate('/signin');
-      }
     });
 
     return () => {
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
-  }, [navigate, location.pathname]);
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
+      if (!session && !isAuthPage) {
+        navigate('/signin', { replace: true });
+      } else if (session && isAuthPage) {
+        navigate('/', { replace: true });
+      }
+    }
+  }, [session, loading, location.pathname, navigate]);
 
   const handleLogout = async () => {
     setShowMoreMenu(false);

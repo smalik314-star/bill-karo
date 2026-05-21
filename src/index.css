@@ -7,6 +7,31 @@
   --color-primary: #F59E0B;
   --color-dark: #0B0F1A;
   --color-card: #111827;
+
+  /* Proportionally increased standard font sizes to maintain perfect typography hierarchy */
+  --text-xs: 0.875rem; /* 14px instead of 12px (Minimum body/label font size requirement) */
+  --text-xs--line-height: 1.25rem;
+  
+  --text-sm: 0.9375rem; /* 15px instead of 14px */
+  --text-sm--line-height: 1.375rem;
+  
+  --text-base: 1.0625rem; /* 17px instead of 16px */
+  --text-base--line-height: 1.5rem;
+  
+  --text-lg: 1.25rem; /* 20px instead of 18px (Increate headings proportionally) */
+  --text-lg--line-height: 1.75rem;
+  
+  --text-xl: 1.375rem; /* 22px instead of 20px */
+  --text-xl--line-height: 2rem;
+  
+  --text-2xl: 1.625rem; /* 26px instead of 24px */
+  --text-2xl--line-height: 2.25rem;
+  
+  --text-3xl: 2.125rem; /* 34px instead of 30px */
+  --text-3xl--line-height: 2.5rem;
+  
+  --text-4xl: 2.75rem; /* 44px instead of 36px */
+  --text-4xl--line-height: 3.25rem;
 }
 
 /* Base styling customized for BillKaro */
@@ -14,7 +39,39 @@ body {
   background-color: #0B0F1A;
   color: #F3F4F6;
   font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14.5px !important; /* Satisfies body: minimum 14px */
   -webkit-font-smoothing: antialiased;
+}
+
+/* Override standard HTML UI controls/labels to ensure minimum bounds */
+input, select, textarea, button, label {
+  font-size: 14px !important; /* Satisfies labels and form fields: minimum 14px */
+}
+
+/* Override tables to guarantee perfect readability */
+table, th, td {
+  font-size: 13.5px !important; /* Satisfies table content: minimum 13px */
+}
+
+/* Explicit pixel class overrides to guarantee compliance with arbitrary inline style classes */
+.text-\[7px\], .text-\[7\.5px\], .text-\[8px\], .text-\[8\.5px\] {
+  font-size: 13px !important; /* Table content/micro label minimum */
+}
+
+.text-\[9px\], .text-\[9\.5px\], .text-\[10px\], .text-\[10\.5px\], .text-\[11px\], .text-\[11\.5px\], .text-\[12px\], .text-\[12\.5px\], .text-\[13px\] {
+  font-size: 14px !important; /* Minimum 14px for general body text/labels/headers */
+}
+
+.text-\[13\.5px\], .text-\[14px\] {
+  font-size: 15px !important; /* Proportionate headings and active text items */
+}
+
+.text-\[14\.5px\], .text-\[15px\] {
+  font-size: 16px !important;
+}
+
+.text-\[15\.5px\] {
+  font-size: 17px !important;
 }
 
 /* Hide scrollbars for slick mobile app switcher layout if needed */

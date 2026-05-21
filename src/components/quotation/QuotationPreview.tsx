@@ -113,7 +113,7 @@ export default function QuotationPreview({ quotation, onConvert, onClose }: Quot
 
     // Build elegant billing slip format for whatsapp chat
     const lineItemsStr = quotation.items.map((it, idx) => 
-      `🔹 ${idx + 1}. *${it.name}* - ₹${it.rate.toLocaleString('en-IN')}`
+      `🔹 ${idx + 1}. *${it.name}* - ₹${(it.rate ?? 0).toLocaleString('en-IN')}`
     ).join('\n');
 
     const whatsappMessage = 
@@ -129,12 +129,12 @@ export default function QuotationPreview({ quotation, onConvert, onClose }: Quot
 ${lineItemsStr}
 
 *वित्तीय सारांश (Financials):*
-🔸 कच्छा योग (Subtotal): ₹${subtotal.toLocaleString('en-IN')}
-🔸 छूट डिस्काउंट (Discount): ₹${discount.toLocaleString('en-IN')}
-🌟 *कुल राशि (Grand Total): ₹${grandTotal.toLocaleString('en-IN')}*
+🔸 कच्छा योग (Subtotal): ₹${(subtotal ?? 0).toLocaleString('en-IN')}
+🔸 छूट डिस्काउंट (Discount): ₹${(discount ?? 0).toLocaleString('en-IN')}
+🌟 *कुल राशि (Grand Total): ₹${(grandTotal ?? 0).toLocaleString('en-IN')}*
 
-💸 *प्राप्त एडवांस (Advance):* ₹${advanceAmount.toLocaleString('en-IN')} (${quotation.advanceMode || 'Cash'})
-⚠️ *अंतिम देय शीष (Balance Due):* *₹${balanceOutstanding.toLocaleString('en-IN')}*
+💸 *प्राप्त एडवांस (Advance):* ₹{(advanceAmount ?? 0).toLocaleString('en-IN')} (${quotation.advanceMode || 'Cash'})
+⚠️ *अंतिम देय शीष (Balance Due):* *₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}*
 
 -----------------------------------
 📝 *लागू शर्ते और नियम (Terms):*
@@ -346,9 +346,9 @@ ${quotation.conditions && quotation.conditions.length > 0
                         <span className="text-[10.5px] text-gray-500 italic">Work category based lumpsum bidding</span>
                       </td>
                       <td className="py-3 text-center text-gray-700 font-mono font-medium">{item.quantity} {item.unit || 'Job'}</td>
-                      <td className="py-3 text-right pr-4 text-gray-700 font-mono">₹{item.rate.toLocaleString('en-IN')}</td>
+                       <td className="py-3 text-right pr-4 text-gray-700 font-mono">₹{(item.rate ?? 0).toLocaleString('en-IN')}</td>
                       <td className="py-3 text-right pr-2 font-black text-gray-950 font-mono">
-                        ₹{(item.rate * item.quantity).toLocaleString('en-IN')}
+                        ₹{((item.rate ?? 0) * (item.quantity ?? 0)).toLocaleString('en-IN')}
                       </td>
                     </tr>
                   ))}
@@ -383,29 +383,29 @@ ${quotation.conditions && quotation.conditions.length > 0
               <div className="bg-gray-50 border border-gray-150 rounded-2xl p-4.5 space-y-2 text-xs">
                 <div className="flex justify-between text-gray-650 font-sans">
                   <span>कच्चा योग (Items Subtotal):</span>
-                  <span className="font-bold text-gray-900 font-mono">₹{subtotal.toLocaleString('en-IN')}</span>
+                  <span className="font-bold text-gray-900 font-mono">₹{(subtotal ?? 0).toLocaleString('en-IN')}</span>
                 </div>
                 
                 {discount > 0 && (
                   <div className="flex justify-between text-rose-650">
                     <span>छूट डिस्काउंट (Discount Amount):</span>
-                    <strong className="font-mono text-rose-600">- ₹{discount.toLocaleString('en-IN')}</strong>
+                    <strong className="font-mono text-rose-600">- ₹{(discount ?? 0).toLocaleString('en-IN')}</strong>
                   </div>
                 )}
                 
                 <div className="flex justify-between border-t border-gray-200 pt-2 text-gray-950 font-extrabold text-[12.5px]">
                   <span>कुल अनुमानित देय (Grand Total):</span>
-                  <span className="font-black text-gray-950 font-mono">₹{grandTotal.toLocaleString('en-IN')}</span>
+                  <span className="font-black text-gray-950 font-mono">₹{(grandTotal ?? 0).toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="flex justify-between text-emerald-700 pt-1">
                   <span>सुरक्षित जमा एडवांस (Advance Received):</span>
-                  <strong className="font-mono text-emerald-600">₹{advanceAmount.toLocaleString('en-IN')}</strong>
+                  <strong className="font-mono text-emerald-600">₹{(advanceAmount ?? 0).toLocaleString('en-IN')}</strong>
                 </div>
 
                 <div className="flex justify-between border-t-2 border-dashed border-gray-200 pt-2.5 font-black text-amber-800 text-[13.5px]">
                   <span className="uppercase">अंतिम शेष (Due Balance):</span>
-                  <span className="text-[15px] font-black font-mono">₹{balanceOutstanding.toLocaleString('en-IN')}</span>
+                  <span className="text-[15px] font-black font-mono">₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>

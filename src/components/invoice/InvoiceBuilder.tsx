@@ -255,7 +255,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
             >
               <option value="">-- चुनें (Select Estimate) --</option>
               {quotations.filter(q => !q.isConverted).map(q => (
-                <option key={q.id} value={q.id}>{q.quoteNumber} (₹{q.items.reduce((s, i) => s + i.rate, 0).toLocaleString('en-IN')})</option>
+                <option key={q.id} value={q.id}>{q.quoteNumber} (₹{(q.items?.reduce((s, i) => s + (i.rate ?? 0), 0) ?? 0).toLocaleString('en-IN')})</option>
               ))}
             </select>
           </div>
@@ -534,17 +534,17 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
                           {item.quantity} {item.unit}
                         </td>
                         <td className="py-2.5 text-right font-mono text-gray-350">
-                          ₹{item.rate.toLocaleString('en-IN')}
+                          ₹{(item.rate ?? 0).toLocaleString('en-IN')}
                         </td>
                         {isGstApplied && (
                           <td className="py-2.5 text-center font-mono">
                             <span className="bg-gray-950 px-2 py-0.5 rounded text-[10px] font-bold border border-gray-850 text-gray-400">
-                              {item.gstPercent}% (₹{taxVal.toLocaleString('en-IN')})
+                              {item.gstPercent}% (₹{(taxVal ?? 0).toLocaleString('en-IN')})
                             </span>
                           </td>
                         )}
                         <td className="py-2.5 text-right font-black font-mono text-gray-100 pr-3">
-                          ₹{netAmt.toLocaleString('en-IN')}
+                          ₹{(netAmt ?? 0).toLocaleString('en-IN')}
                         </td>
                         <td className="py-2.5 text-center">
                           <button 
@@ -617,9 +617,9 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
                 भुगतान इतिहास (Payment Status History)
               </h4>
               <div className="text-xs text-gray-400 space-y-1 pt-1 font-sans">
-                <div>कुल देय: <span className="font-bold text-white">₹{initialData.totalAmount.toLocaleString('en-IN')}</span></div>
-                <div>जमा राशि: <span className="font-bold text-emerald-400">₹{initialData.paidAmount.toLocaleString('en-IN')}</span></div>
-                <div>बकाया राशि: <span className="font-bold text-amber-400">₹{(initialData.totalAmount - initialData.paidAmount).toLocaleString('en-IN')}</span></div>
+                <div>कुल देय: <span className="font-bold text-white">₹{(initialData?.totalAmount ?? 0).toLocaleString('en-IN')}</span></div>
+                <div>जमा राशि: <span className="font-bold text-emerald-400">₹{(initialData?.paidAmount ?? 0).toLocaleString('en-IN')}</span></div>
+                <div>बकाया राशि: <span className="font-bold text-amber-400">₹{((initialData?.totalAmount ?? 0) - (initialData?.paidAmount ?? 0)).toLocaleString('en-IN')}</span></div>
                 <div className="pt-1.5 text-[10px] text-amber-500 uppercase tracking-widest font-bold">
                   * पेमेंट एडिट करने के लिए बिल सूची पर 'जमा करें (Payment)' बटन का प्रयोग करें।
                 </div>
@@ -699,7 +699,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
             <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
               <span className="text-gray-500 text-[10px] block uppercase font-mono">कुल माल/सेवा शुल्क (Subtotal)</span>
               <span className="text-sm font-extrabold text-white mt-1 block">
-                ₹{subtotal.toLocaleString('en-IN')}
+                ₹{(subtotal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -709,7 +709,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
                 {isGstApplied ? `${gstType === 'CGST_SGST' ? 'CGST+SGST (टैक्स)' : 'IGST (टैक्स)'}` : 'जीएसटी टैक्स'}
               </span>
               <span className="text-sm font-extrabold text-amber-400 mt-1 block">
-                ₹{totalGst.toLocaleString('en-IN')}
+                ₹{(totalGst ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -717,7 +717,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
             <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
               <span className="text-gray-500 text-[10px] block uppercase font-mono">छूट (Discount)</span>
               <span className="text-sm font-extrabold text-rose-400 mt-1 block">
-                - ₹{discountVal.toLocaleString('en-IN')}
+                - ₹{(discountVal ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -725,7 +725,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
             <div className="p-3 bg-gray-950/40 rounded-xl border border-gray-850">
               <span className="text-gray-500 text-[10px] block uppercase font-mono">सुरक्षित जमा (Paid Amount)</span>
               <span className="text-sm font-extrabold text-emerald-400 mt-1 block">
-                ₹{(initialData?.paidAmount || initialPaidVal).toLocaleString('en-IN')}
+                ₹{((initialData?.paidAmount || initialPaidVal) ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -733,7 +733,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
             <div className="p-3 bg-[#241E15] rounded-xl border border-amber-500/30 col-span-2 lg:col-span-1">
               <span className="text-amber-500 text-[10.5px] block uppercase font-mono font-black">बकाया बैलेंस (Due Balance)</span>
               <span className="text-[15px] font-black text-amber-400 mt-0.5 block font-mono">
-                ₹{balanceOutstanding.toLocaleString('en-IN')}
+                ₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}
               </span>
             </div>
 

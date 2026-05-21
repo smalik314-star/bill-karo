@@ -421,7 +421,7 @@ export default function ProfitCalculator() {
                   const client = clients.find(c => c.id === (inv.client_id || inv.clientId));
                   return (
                     <option key={inv.id} value={inv.id}>
-                      {num} - {client?.name || 'Grahak'} (₹{gTotal.toLocaleString('en-IN')})
+                      {num} - {client?.name || 'Grahak'} (₹{(gTotal ?? 0).toLocaleString('en-IN')})
                     </option>
                   );
                 })}
@@ -527,28 +527,28 @@ export default function ProfitCalculator() {
                 <div className="space-y-2.5 font-mono text-xs">
                   <div className="flex justify-between items-center text-gray-400">
                     <span>1. कुल कमाई (Revenue):</span>
-                    <span className="font-bold text-white">₹{revenue.toLocaleString('en-IN')}</span>
+                    <span className="font-bold text-white">₹{(revenue ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between items-center text-gray-400">
                     <span>2. सामग्री खर्चा (Material):</span>
-                    <span>- ₹{matCost.toLocaleString('en-IN')}</span>
+                    <span>- ₹{(matCost ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between items-center text-gray-400">
                     <span>3. लेबर खर्चा (Labour):</span>
-                    <span>- ₹{labCost.toLocaleString('en-IN')}</span>
+                    <span>- ₹{(labCost ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between items-center text-gray-400">
                     <span>4. ट्रांसपोर्ट किराया (Transport):</span>
-                    <span>- ₹{transCost.toLocaleString('en-IN')}</span>
+                    <span>- ₹{(transCost ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between items-center text-gray-400 pb-2 border-b border-gray-800">
                     <span>5. अन्य खर्चा (Other Costs):</span>
-                    <span>- ₹{othCost.toLocaleString('en-IN')}</span>
+                    <span>- ₹{(othCost ?? 0).toLocaleString('en-IN')}</span>
                   </div>
 
                   <div className="flex justify-between items-center text-sm font-black pt-1">
                     <span className="text-gray-300">Total Expenditure:</span>
-                    <span className="text-orange-400">₹{totalExpense.toLocaleString('en-IN')}</span>
+                    <span className="text-orange-400">₹{(totalExpense ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
               </div>
@@ -569,7 +569,7 @@ export default function ProfitCalculator() {
                 </div>
                 
                 <h2 className="text-2xl font-black mt-1.5 font-mono">
-                  {isLoss ? '-' : '+'}₹{Math.abs(netProfit).toLocaleString('en-IN')}
+                  {isLoss ? '-' : '+'}₹{Math.abs(netProfit ?? 0).toLocaleString('en-IN')}
                 </h2>
 
                 <div className="mt-2 text-[10px] uppercase font-black tracking-widest">
@@ -665,20 +665,20 @@ export default function ProfitCalculator() {
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1 font-mono text-[10px] text-gray-400 pt-1">
-                      <div>सामग्री (Material): ₹{parseFloat(e.material_cost || 0).toLocaleString('en-IN')}</div>
-                      <div>कारीगरी (Labour): ₹{parseFloat(e.labour_cost || 0).toLocaleString('en-IN')}</div>
-                      <div>किराया (Transport): ₹{parseFloat(e.transport || 0).toLocaleString('en-IN')}</div>
-                      <div>अन्य (Other): ₹{parseFloat(e.other || 0).toLocaleString('en-IN')}</div>
+                      <div>सामग्री (Material): ₹{(parseFloat(e.material_cost || 0) ?? 0).toLocaleString('en-IN')}</div>
+                      <div>कारीगरी (Labour): ₹{(parseFloat(e.labour_cost || 0) ?? 0).toLocaleString('en-IN')}</div>
+                      <div>किराया (Transport): ₹{(parseFloat(e.transport || 0) ?? 0).toLocaleString('en-IN')}</div>
+                      <div>अन्य (Other): ₹{(parseFloat(e.other || 0) ?? 0).toLocaleString('en-IN')}</div>
                     </div>
                   </div>
 
                   {/* Financial outcome status */}
                   <div className="flex items-center justify-between md:justify-end w-full md:w-auto space-x-4 border-t md:border-t-0 pt-2 md:pt-0 border-gray-850">
                     <div className="font-mono text-left md:text-right">
-                      <div className="text-[10px] text-gray-500">कमाई: ₹{rev.toLocaleString('en-IN')} | खर्चा: ₹{parseFloat(e.total_expense || 0).toLocaleString('en-IN')}</div>
+                      <div className="text-[10px] text-gray-500">कमाई: ₹{(rev ?? 0).toLocaleString('en-IN')} | खर्चा: ₹{(parseFloat(e.total_expense || 0) ?? 0).toLocaleString('en-IN')}</div>
                       <div className="flex items-center space-x-1.5 mt-0.5">
                         <span className={`text-xs font-black px-2 py-0.5 rounded tracking-wide ${hasLoss ? 'bg-red-500/10 text-red-400 border border-red-500/25' : 'bg-emerald-500/10 text-emerald-450 border border-emerald-500/25'}`}>
-                          {hasLoss ? 'नुकसान' : 'बचत'}: ₹{Math.abs(profit).toLocaleString('en-IN')} ({percent.toFixed(1)}%)
+                          {hasLoss ? 'नुकसान' : 'बचत'}: ₹{Math.abs(profit ?? 0).toLocaleString('en-IN')} ({percent.toFixed(1)}%)
                         </span>
                       </div>
                     </div>

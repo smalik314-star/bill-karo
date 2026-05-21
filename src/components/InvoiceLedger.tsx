@@ -401,7 +401,7 @@ export default function InvoiceLedger() {
               </div>
 
               <div className="text-right ml-4">
-                <span className="text-xs font-black text-white">₹{inv.totalAmount.toLocaleString('en-IN')}</span>
+                <span className="text-xs font-black text-white">₹{(inv.totalAmount ?? 0).toLocaleString('en-IN')}</span>
                 <span className="text-[8.5px] text-gray-500 block">Pay: ₹{inv.paidAmount}</span>
               </div>
             </div>
@@ -496,7 +496,7 @@ export default function InvoiceLedger() {
                       <td className="py-2 text-center font-mono">₹{it.rate}</td>
                       <td className="py-2 text-center font-mono">{it.quantity} {it.unit}</td>
                       {selectedInvoice.isGstApplied && <td className="py-2 text-center font-mono">{it.gstPercent}%</td>}
-                      <td className="py-2 text-right pr-2 font-bold font-mono">₹{(it.rate * it.quantity).toLocaleString('en-IN')}</td>
+                      <td className="py-2 text-right pr-2 font-bold font-mono">₹{((it.rate ?? 0) * (it.quantity ?? 0)).toLocaleString('en-IN')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -516,12 +516,12 @@ export default function InvoiceLedger() {
               <div className="w-[180px] bg-gray-50 p-2.5 rounded text-[11px] space-y-1 text-right">
                 <div className="flex justify-between text-gray-500">
                   <span>Subtotal:</span>
-                  <span>₹{calculateSubtotal(selectedInvoice.items).toLocaleString('en-IN')}</span>
+                  <span>₹{(calculateSubtotal(selectedInvoice.items) ?? 0).toLocaleString('en-IN')}</span>
                 </div>
                 {selectedInvoice.isGstApplied && (
                   <div className="flex justify-between text-gray-500">
                     <span>Tax (GST):</span>
-                    <span>₹{calculateTax(selectedInvoice.items).toLocaleString('en-IN')}</span>
+                    <span>₹{(calculateTax(selectedInvoice.items) ?? 0).toLocaleString('en-IN')}</span>
                   </div>
                 )}
                 {selectedInvoice.discount > 0 && (
@@ -532,11 +532,11 @@ export default function InvoiceLedger() {
                 )}
                 <div className="flex justify-between border-t border-gray-200 pt-1 font-bold text-md text-gray-900">
                   <span>GRAND TOTAL:</span>
-                  <span className="text-[#D97706]">₹{selectedInvoice.totalAmount.toLocaleString('en-IN')}</span>
+                  <span className="text-[#D97706]">₹{(selectedInvoice.totalAmount ?? 0).toLocaleString('en-IN')}</span>
                 </div>
                 <div className="text-[10px] pt-1 text-gray-500 border-t border-dashed border-gray-200">
-                  <div>Paid: ₹{selectedInvoice.paidAmount.toLocaleString('en-IN')}</div>
-                  <div className="font-bold text-red-600">Baqi Balance: ₹{(selectedInvoice.totalAmount - selectedInvoice.paidAmount).toLocaleString('en-IN')}</div>
+                  <div>Paid: ₹{(selectedInvoice.paidAmount ?? 0).toLocaleString('en-IN')}</div>
+                  <div className="font-bold text-red-600">Baqi Balance: ₹{((selectedInvoice.totalAmount ?? 0) - (selectedInvoice.paidAmount ?? 0)).toLocaleString('en-IN')}</div>
                 </div>
               </div>
             </div>

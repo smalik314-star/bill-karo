@@ -202,7 +202,7 @@ export default function ExpenseEntry({
 
             <div className="flex items-center space-x-3 shrink-0 ml-2">
               <span className="font-mono text-xs font-black text-rose-450">
-                - ₹{parseFloat(exp.amount || 0).toLocaleString('en-IN')}
+                - ₹{(parseFloat(exp.amount?.toString() || '0') ?? 0).toLocaleString('en-IN')}
               </span>
               <button
                 onClick={() => onDeleteExpense(exp.id)}

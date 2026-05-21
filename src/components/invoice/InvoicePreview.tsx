@@ -133,7 +133,7 @@ export default function InvoicePreview({ invoice, onClose }: InvoicePreviewProps
     }
 
     const itemLinesStr = invoice.items.map((it, idx) => 
-      `🔹 ${idx + 1}. *${it.name}* (Qty: ${it.quantity} ${it.unit}) ${it.hsn ? `[HSN ${it.hsn}]` : ''} - ₹${(it.rate * it.quantity).toLocaleString('en-IN')}`
+      `🔹 ${idx + 1}. *${it.name}* (Qty: ${it.quantity} ${it.unit}) ${it.hsn ? `[HSN ${it.hsn}]` : ''} - ₹${((it.rate ?? 0) * (it.quantity ?? 0)).toLocaleString('en-IN')}`
     ).join('\n');
 
     const whatsappMessage = 
@@ -152,13 +152,13 @@ export default function InvoicePreview({ invoice, onClose }: InvoicePreviewProps
 ${itemLinesStr}
 
 *वित्तीय विवरणी (Financial Summary):*
-🔸 कच्छा योग (Subtotal): ₹${subtotal.toLocaleString('en-IN')}
-${invoice.isGstApplied ? `🔸 जीएसटी टैक्स (GST): ₹${totalGst.toLocaleString('en-IN')}` : ''}
-🔸 छूट (Discount): ₹${discount.toLocaleString('en-IN')}
-🌟 *कुल देय राशि (Grand Total): ₹${grandTotal.toLocaleString('en-IN')}*
+🔸 कच्छा योग (Subtotal): ₹${(subtotal ?? 0).toLocaleString('en-IN')}
+${invoice.isGstApplied ? `🔸 जीएसटी टैक्स (GST): ₹${(totalGst ?? 0).toLocaleString('en-IN')}` : ''}
+🔸 छूट (Discount): ₹${(discount ?? 0).toLocaleString('en-IN')}
+🌟 *कुल देय राशि (Grand Total): ₹${(grandTotal ?? 0).toLocaleString('en-IN')}*
 
-💸 *कुल प्राप्त जमा (Paid amount):* ₹${invoice.paidAmount.toLocaleString('en-IN')}
-⚠️ *बकाया शेष मूल्य (Due Balance):* *₹${balanceOutstanding.toLocaleString('en-IN')}*
+💸 *कुल प्राप्त जमा (Paid amount):* ₹${(invoice.paidAmount ?? 0).toLocaleString('en-IN')}
+⚠️ *बकाया शेष मूल्य (Due Balance):* *₹${(balanceOutstanding ?? 0).toLocaleString('en-IN')}*
 
 -----------------------------------
 🏦 *बैंक विवरण भुगतान के लिए (Bank Ledger):*
@@ -384,19 +384,19 @@ _आप दिए गए UPI आईडी पर सीधे PhonePe / GooglePa
                           {item.quantity} {item.unit || 'Pcs'}
                         </td>
                         <td className="py-3 text-right pr-3 text-gray-700 font-mono">
-                          ₹{item.rate.toLocaleString('en-IN')}
+                          ₹{(item.rate ?? 0).toLocaleString('en-IN')}
                         </td>
                         
                         {/* GST Display Column */}
                         {invoice.isGstApplied && (
                           <td className="py-3 text-center font-mono">
                             <span className="text-gray-800 font-bold block">{item.gstPercent}%</span>
-                            <span className="text-[9.5px] text-gray-550 block">₹{itemGst.toLocaleString('en-IN')}</span>
+                            <span className="text-[9.5px] text-gray-550 block">₹{(itemGst ?? 0).toLocaleString('en-IN')}</span>
                           </td>
                         )}
 
                         <td className="py-3 text-right pr-2 font-black text-gray-950 font-mono">
-                          ₹{itemTotalAmt.toLocaleString('en-IN')}
+                          ₹{(itemTotalAmt ?? 0).toLocaleString('en-IN')}
                         </td>
                       </tr>
                     );
@@ -455,7 +455,7 @@ _आप दिए गए UPI आईडी पर सीधे PhonePe / GooglePa
                   {/* Base charge subtotal before tax */}
                   <div className="flex justify-between text-gray-600">
                     <span>कच्चा मूल्य योग (Subtotal):</span>
-                    <span className="font-bold text-gray-900 font-mono">₹{subtotal.toLocaleString('en-IN')}</span>
+                    <span className="font-bold text-gray-900 font-mono">₹{(subtotal ?? 0).toLocaleString('en-IN')}</span>
                   </div>
 
                   {/* GST SPLIT CGST+SGST or IGST */}
@@ -464,17 +464,17 @@ _आप दिए गए UPI आईडी पर सीधे PhonePe / GooglePa
                       {invoice.gstType === 'IGST' ? (
                         <div className="flex justify-between text-[11px] text-teal-800">
                           <span>एकीकृत जीएसटी (IGST @ 100%):</span>
-                          <span className="font-mono font-bold">₹{totalGst.toLocaleString('en-IN')}</span>
+                          <span className="font-mono font-bold">₹{(totalGst ?? 0).toLocaleString('en-IN')}</span>
                         </div>
                       ) : (
                         <>
                           <div className="flex justify-between text-[10.5px] text-teal-800">
                             <span>केंद्रीय जीएसटी (CGST @ 50%):</span>
-                            <span className="font-mono font-semibold">₹{(totalGst / 2).toLocaleString('en-IN')}</span>
+                            <span className="font-mono font-semibold">₹{((totalGst ?? 0) / 2).toLocaleString('en-IN')}</span>
                           </div>
                           <div className="flex justify-between text-[10.5px] text-teal-800">
                             <span>राज्य जीएसटी (SGST @ 50%):</span>
-                            <span className="font-mono font-semibold">₹{(totalGst / 2).toLocaleString('en-IN')}</span>
+                            <span className="font-mono font-semibold">₹{((totalGst ?? 0) / 2).toLocaleString('en-IN')}</span>
                           </div>
                         </>
                       )}
@@ -484,26 +484,26 @@ _आप दिए गए UPI आईडी पर सीधे PhonePe / GooglePa
                   {discount > 0 && (
                     <div className="flex justify-between text-rose-650">
                       <span>छूट डिस्काउंट (Discount Amt):</span>
-                      <strong className="font-mono text-rose-650">- ₹{discount.toLocaleString('en-IN')}</strong>
+                      <strong className="font-mono text-rose-650">- ₹{(discount ?? 0).toLocaleString('en-IN')}</strong>
                     </div>
                   )}
 
                   {/* Invoiced aggregate amount */}
                   <div className="flex justify-between border-t border-gray-200 pt-2 text-gray-950 font-black text-[13px]">
                     <span className="uppercase">कुल कर-युक्त देय (Grand Total):</span>
-                    <span className="font-black text-gray-950 font-mono text-[14px]">₹{grandTotal.toLocaleString('en-IN')}</span>
+                    <span className="font-black text-gray-950 font-mono text-[14px]">₹{(grandTotal ?? 0).toLocaleString('en-IN')}</span>
                   </div>
 
                   {/* Amount paid */}
                   <div className="flex justify-between text-emerald-800 border-t border-dashed border-gray-200 pt-2 font-semibold">
                     <span>प्राप्त जमा राशि (Paid Amount):</span>
-                    <strong className="font-mono text-emerald-700">₹{invoice.paidAmount.toLocaleString('en-IN')}</strong>
+                    <strong className="font-mono text-emerald-700">₹{(invoice.paidAmount ?? 0).toLocaleString('en-IN')}</strong>
                   </div>
 
                   {/* Outstanding balance */}
                   <div className="flex justify-between border-t-2 border-solid border-gray-300 pt-2 text-amber-900 font-extrabold text-[13.5px]">
                     <span className="uppercase tracking-wide font-mono">शेष बकाया (Outstanding):</span>
-                    <span className="text-[15.5px] font-black font-mono">₹{balanceOutstanding.toLocaleString('en-IN')}</span>
+                    <span className="text-[15.5px] font-black font-mono">₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}</span>
                   </div>
 
                 </div>
@@ -523,8 +523,8 @@ _आप दिए गए UPI आईडी पर सीधे PhonePe / GooglePa
                     </div>
                     <div>
                       <span className="text-[10px] font-extrabold text-amber-800 uppercase tracking-widest font-mono block">UPI SCAN TO PAY</span>
-                      <p className="text-[9px] text-gray-500 mt-0.5 leading-snug">
-                        इस इनवॉइस की बकाया देय राशि <strong className="text-gray-900">₹{balanceOutstanding.toLocaleString('en-IN')}</strong> को तुरंत PhonePe या GPay से चुकाने के लिए यहाँ स्कैन करें।
+                      <p className="text-[9px] text-gray-550 mt-0.5 leading-snug">
+                        इस इनवॉइस की बकाया देय राशि <strong className="text-gray-900">₹{(balanceOutstanding ?? 0).toLocaleString('en-IN')}</strong> को तुरंत PhonePe या GPay से चुकाने के लिए यहाँ स्कैन करें।
                       </p>
                     </div>
                   </div>
