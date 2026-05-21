@@ -125,11 +125,11 @@ export default function Sidebar() {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center space-x-3 p-2.5 rounded-xl transition-all cursor-pointer ${
                 isActive 
-                  ? 'bg-amber-500 text-[#090D16] border border-amber-400 font-extrabold shadow-md shadow-amber-500/10' 
-                  : 'text-gray-200 hover:bg-gray-800 hover:text-amber-400 border border-transparent'
+                  ? 'bg-amber-500 text-black border border-amber-400 font-extrabold shadow-md shadow-amber-500/10' 
+                  : 'text-white hover:bg-gray-800 hover:text-amber-400 border border-transparent'
               }`}
             >
-              <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-[#090D16]' : 'text-gray-300'}`} />
+              <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-black' : 'text-white'}`} />
               {!collapsed && (
                 <span className="text-xs font-black truncate">{t(item.label)}</span>
               )}
