@@ -1,5 +1,6 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useContext } from 'react';
 import useAppStore from '../store';
+import { LanguageContext } from '../context/LanguageContext';
 
 const HINDI_RANGE_REGEX = /[\u0900-\u097F]/;
 const ENGLISH_RANGE_REGEX = /[a-zA-Z]/;
@@ -462,13 +463,19 @@ export const translateText = (text: string, lang: 'Hindi' | 'English' | 'Hinglis
 };
 
 export const useTranslation = () => {
+  const context = useContext(LanguageContext);
+  if (context) {
+    return {
+      language: context.language,
+      t: context.t
+    };
+  }
+
   const profile = useAppStore((state) => state.profile);
   const storedLang = localStorage.getItem('billkaro_language');
   const language = (storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English';
 
-  const t = useMemo(() => {
-    return (text: string): string => translateText(text, language);
-  }, [language]);
+  const t = (text: string): string => translateText(text, language);
 
   return {
     language,
@@ -480,9 +487,10 @@ export const useTranslation = () => {
  * Global Real-Time DOM Translation engine for zero-gaps coverage
  */
 export const useGlobalDOMTranslator = () => {
+  const context = useContext(LanguageContext);
   const profile = useAppStore((state) => state.profile);
   const storedLang = localStorage.getItem('billkaro_language');
-  const language = (storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English';
+  const language = context ? context.language : ((storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English');
 
   useEffect(() => {
     const translateNode = (node: Node) => {
