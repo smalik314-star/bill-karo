@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAppStore } from '../store';
+import { motion } from 'motion/react';
 import { 
   User, 
   Phone, 
@@ -293,7 +294,12 @@ export default function ClientDetail() {
       </div>
 
       {/* Profile summary screen */}
-      <div className="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-xl relative overflow-hidden">
+      <motion.div 
+        className="bg-gray-900 rounded-3xl p-6 border border-gray-800 shadow-xl relative overflow-hidden"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
         
         {isEditing ? (
@@ -428,17 +434,22 @@ export default function ClientDetail() {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Static Notes display (if not in editing mode) */}
       {!isEditing && client?.notes && (
-        <div className="bg-[#1C160C] border border-amber-500/20 rounded-2xl p-4 shadow">
+        <motion.div 
+          className="bg-[#1C160C] border border-amber-500/20 rounded-2xl p-4 shadow"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className="flex items-center space-x-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-amber-550" />
+            <Sparkles className="h-3.5 w-3.5 text-amber-555" />
             <h4 className="text-[10px] font-black text-amber-500 uppercase tracking-wider font-mono">महत्वपूर्ण ग्राहक टिप्पणी (Specific Work Instructions)</h4>
           </div>
           <p className="text-xs text-gray-300 mt-2 leading-relaxed whitespace-pre-line">{client.notes}</p>
-        </div>
+        </motion.div>
       )}
 
       {/* Profile content ledger tabs switcher */}
@@ -480,7 +491,12 @@ export default function ClientDetail() {
       </div>
 
       {/* Render sub list based on selected Tab */}
-      <div className="space-y-3 font-sans">
+      <motion.div 
+        className="space-y-3 font-sans"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+      >
         {activeTab === 'invoices' ? (
           /* Render invoices */
           invoices.length === 0 ? (
@@ -606,7 +622,7 @@ export default function ClientDetail() {
             })
           )
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

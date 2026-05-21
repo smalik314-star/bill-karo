@@ -81,6 +81,9 @@ export default function InvoicePreview({ invoice, onClose }: InvoicePreviewProps
     try {
       element.classList.add('pdf-rendering');
 
+      // Wait briefly for style recalculation and browser repaint
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
       const canvas = await html2canvas(element, {
         scale: 2.2, // fine resolution sharp printout
         useCORS: true,
@@ -519,6 +522,7 @@ _आप दिए गए UPI आईडी पर सीधे PhonePe / GooglePa
                         height={68}
                         className="object-contain"
                         referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
                       />
                     </div>
                     <div>

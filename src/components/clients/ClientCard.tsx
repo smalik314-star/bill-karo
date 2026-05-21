@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Phone, Calendar, ArrowRight, User, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { motion } from 'motion/react';
 import { Client } from '../../types';
 
 interface ClientCardProps {
@@ -55,9 +56,13 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
   };
 
   return (
-    <div 
+    <motion.div 
       onClick={() => navigate(`/clients/${client.id}`)}
-      className="bg-gray-900/90 border border-gray-800/80 hover:border-amber-500/40 rounded-2xl p-4.5 transition duration-200 cursor-pointer shadow hover:shadow-md flex flex-col justify-between space-y-3"
+      className="bg-gray-900/90 border border-gray-800/80 hover:border-amber-500/40 rounded-2xl p-4.5 cursor-pointer shadow hover:shadow-md flex flex-col justify-between space-y-3"
+      initial={{ opacity: 0, y: 15, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -15, scale: 0.98 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
     >
       {/* Top row */}
       <div className="flex items-start justify-between">
@@ -132,7 +137,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, dueDateSum }) => {
           <ArrowRight className="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" />
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
