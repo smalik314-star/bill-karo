@@ -7,6 +7,8 @@ import Modal from './Modal';
 import Button from './Button';
 import toast from 'react-hot-toast';
 
+
+
 interface SubscriptionGateProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;

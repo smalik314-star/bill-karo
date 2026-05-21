@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, Calendar, FileText, Search, CreditCard, X, Wrench } from 'lucide-react';
 
+
 interface ExpenseEntryProps {
   expenses: any[];
   onAddExpense: (category: string, amount: number, date: string, note: string) => Promise<void>;
@@ -14,6 +15,7 @@ export default function ExpenseEntry({
   onDeleteExpense,
   loading
 }: ExpenseEntryProps) {
+
   
   const [showForm, setShowForm] = useState(false);
   const [category, setCategory] = useState('Material');

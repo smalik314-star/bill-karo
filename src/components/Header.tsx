@@ -8,6 +8,7 @@ import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 
 export default function Header() {
+
   const { profile, subscription, setSubscription } = useAppStore();
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage();

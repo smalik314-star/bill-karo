@@ -2,6 +2,7 @@ import React from 'react';
 import { PackageOpen } from 'lucide-react';
 import Button from './Button';
 
+
 interface EmptyStateProps {
   title?: string;
   hindiTitle?: string;

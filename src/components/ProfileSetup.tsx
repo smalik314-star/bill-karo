@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import useAppStore from '../store';
 import { Save, AlertCircle, Sparkles, Building, CheckCircle } from 'lucide-react';
 
+
 export default function ProfileSetup() {
+
   const { profile, updateProfile } = useAppStore();
 
   const [form, setForm] = useState({

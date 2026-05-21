@@ -22,7 +22,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
 export default function ClientDetail() {
+
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const store = useAppStore();

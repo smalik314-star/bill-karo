@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useAppStore from '../store';
 import { 
+
   AlertTriangle, 
   Plus, 
   Trash2, 
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react';
 
 export default function StockInventory() {
+
   const { inventory, addInventoryItem, updateStock, deleteInventoryItem } = useAppStore();
 
   const [showAddForm, setShowAddForm] = useState(false);

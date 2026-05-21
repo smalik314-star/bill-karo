@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { useAppStore } from '../../store';
 import { toast } from 'react-hot-toast';
 
+
 interface AddClientModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -11,6 +12,7 @@ interface AddClientModalProps {
 }
 
 export default function AddClientModal({ isOpen, onClose, onSuccess }: AddClientModalProps) {
+
   const store = useAppStore();
   const [loading, setLoading] = useState(false);
 

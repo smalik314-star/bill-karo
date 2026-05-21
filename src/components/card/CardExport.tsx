@@ -5,12 +5,14 @@ import useAppStore from '../../store';
 import { Download, Share2, Eye, EyeOff, Sparkles, CheckCircle2, Crown, BadgePercent } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
 interface CardExportProps {
   data: CardData;
   templateId: 'bold' | 'minimal' | 'classic' | 'colorful' | 'professional' | 'desi';
 }
 
 export default function CardExport({ data, templateId }: CardExportProps) {
+
   const { subscription, setSubscription } = useAppStore();
   const [exportSize, setExportSize] = useState<'whatsapp' | 'instagram' | 'facebook'>('whatsapp');
   const [downloading, setDownloading] = useState(false);

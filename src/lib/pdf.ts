@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { Invoice, Quotation, InvoicePayment, Client, BusinessProfile, Transaction } from '../types';
 
+
 interface InvoicePDFData {
   invoice: Invoice;
   client?: Client;

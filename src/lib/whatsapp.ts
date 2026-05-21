@@ -1,6 +1,7 @@
 import { Invoice, Quotation, InvoicePayment, Client, BusinessProfile } from '../types';
 import toast from 'react-hot-toast';
 
+
 /**
  * Sanitizes phone numbers to include 91 country prefix if missing
  */

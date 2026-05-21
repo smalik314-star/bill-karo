@@ -28,6 +28,7 @@ interface InvoiceBuilderProps {
 }
 
 export default function InvoiceBuilder({ onSave, onCancel, initialData, preselectedQuotationId }: InvoiceBuilderProps) {
+
   const { clients, quotations, invoices } = useAppStore();
 
   // Selected state for importing from Quotation
@@ -245,6 +246,7 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
         </div>
         
         {/* Quick import panel for new invoices */}
+
         {!initialData && (
           <div className="flex items-center space-x-2 bg-gray-950 p-2 rounded-xl border border-gray-850">
             <span className="text-[10px] text-gray-400 uppercase font-mono font-bold pl-1">कोटेशन आयात करें:</span>

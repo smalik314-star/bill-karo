@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useTranslation from '../../hooks/useTranslation';
 import { 
+
+
   LayoutDashboard, 
   Users, 
   FileText, 
@@ -14,6 +16,7 @@ interface BottomNavProps {
 }
 
 export default function BottomNav({ onMoreClick }: BottomNavProps) {
+
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -56,7 +59,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
         >
           <Menu className="h-5 w-5 mb-1 text-amber-500" />
           <span className="text-[9.5px] font-black leading-tight block">
-            {t('अधिक (More)')}
+            अधिक (More)
           </span>
         </button>
       </div>

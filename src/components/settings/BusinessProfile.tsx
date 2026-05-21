@@ -4,7 +4,9 @@ import { supabase } from '../../lib/supabase';
 import { Save, Image, Smartphone, QrCode, Building, CheckCircle, Languages, AlertCircle, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+
 export default function BusinessProfile() {
+
   const { profile, updateProfile } = useAppStore();
 
   const [form, setForm] = useState({

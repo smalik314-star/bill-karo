@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import useAppStore from '../store';
 import { SubscriptionPlan } from '../types';
 
+
 export interface SubscriptionInfo {
   plan: SubscriptionPlan;
   isPremium: boolean;

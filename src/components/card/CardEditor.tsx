@@ -3,6 +3,7 @@ import { CardData } from './CardTemplates';
 import { Sparkles, Phone, MapPin, Tag, User, Briefcase, Plus, Trash2, RotateCcw } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
 interface CardEditorProps {
   data: CardData;
   onChange: (updated: CardData) => void;
@@ -10,6 +11,7 @@ interface CardEditorProps {
 }
 
 export default function CardEditor({ data, onChange, onReset }: CardEditorProps) {
+
   const [newSpecialty, setNewSpecialty] = useState('');
 
   const handleChange = (field: keyof CardData, value: any) => {

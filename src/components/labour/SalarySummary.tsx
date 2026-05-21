@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Award, DollarSign, Check, X, CreditCard, ChevronDown, Calendar, AlertCircle, TrendingUp, History, ClipboardList } from 'lucide-react';
 
+
 interface SalarySummaryProps {
   workers: any[];
   attendance: any[];
@@ -16,6 +17,7 @@ export default function SalarySummary({
   onAddPayment,
   loading
 }: SalarySummaryProps) {
+
   
   const [selectedWorker, setSelectedWorker] = useState<any | null>(null);
   const [payAmount, setPayAmount] = useState('');

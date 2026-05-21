@@ -18,7 +18,9 @@ import {
 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 
+
 export default function Pricing() {
+
   const { subscription, setSubscription, profile } = useAppStore();
   const navigate = useNavigate();
 

@@ -6,7 +6,9 @@ import CardExport from '../components/card/CardExport';
 import { CreditCard, Palette, Layout, Sparkles, CheckCircle, Info, RefreshCcw } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
 export default function BusinessCard() {
+
   const { profile, subscription } = useAppStore();
 
   // Create active customizable state initially populated with details from owner profile

@@ -3,6 +3,8 @@ import useAppStore from '../store';
 import { supabase } from '../lib/supabase';
 import useTranslation from '../hooks/useTranslation';
 import { 
+
+
   IndianRupee, 
   ArrowUpRight, 
   ArrowDownLeft, 
@@ -29,6 +31,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
+
   // 1. Local Fallback State (Zustand Store)
   const store = useAppStore();
   const { t } = useTranslation();
@@ -260,7 +263,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <span className="text-[10px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">Ledger Dashboard</span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans">
-            {t('व्यापार का हिसाब-किताब')}
+            व्यापार का हिसाब-किताब
           </h2>
           <p className="text-xs text-gray-550">
             {supabaseMode ? t('सारे बिल और भुगतान सुरक्षित क्लाउड डेटाबेस से सिंक हैं।') : t('लोकल बही खाता मोड सक्रिय है। इंटरनेट आने पर सुरक्षित हो जाएगा।')}

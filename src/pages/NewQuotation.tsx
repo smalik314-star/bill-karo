@@ -23,6 +23,7 @@ import {
 import { toast } from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 
+
 const mapDbQuoteToUi = (q: any): Quotation => {
   return {
     id: q.id,
@@ -42,6 +43,7 @@ const mapDbQuoteToUi = (q: any): Quotation => {
 };
 
 export default function NewQuotation() {
+
   const store = useAppStore();
 
   const [supabaseMode, setSupabaseMode] = useState(false);

@@ -2,6 +2,7 @@ import { useMemo, useEffect, useContext } from 'react';
 import useAppStore from '../store';
 import { LanguageContext } from '../context/LanguageContext';
 
+
 const HINDI_RANGE_REGEX = /[\u0900-\u097F]/;
 const ENGLISH_RANGE_REGEX = /[a-zA-Z]/;
 
@@ -504,11 +505,13 @@ export const useGlobalDOMTranslator = () => {
           
           if (language === 'Hinglish') {
             if (node.nodeValue !== original) {
+              (node as any).__lastTranslated = original;
               node.nodeValue = original;
             }
           } else {
             const translated = translateText(original, language);
             if (node.nodeValue !== translated) {
+              (node as any).__lastTranslated = translated;
               node.nodeValue = translated;
             }
           }
@@ -568,6 +571,7 @@ export const useGlobalDOMTranslator = () => {
       if (root.nodeType === Node.TEXT_NODE) {
         if ((root as any).__originalValue !== undefined) {
           if (root.nodeValue !== (root as any).__originalValue) {
+            (root as any).__lastTranslated = (root as any).__originalValue;
             root.nodeValue = (root as any).__originalValue;
           }
         }
@@ -618,6 +622,8 @@ export const useGlobalDOMTranslator = () => {
                 if (node.nodeValue !== translated) {
                   node.nodeValue = translated;
                 }
+              } else {
+                (node as any).__lastTranslated = val;
               }
             }
           }

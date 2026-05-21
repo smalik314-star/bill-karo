@@ -19,7 +19,10 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
+
 export default function Clients() {
+
   const store = useAppStore();
   const { t } = useTranslation();
   const [supabaseMode, setSupabaseMode] = useState(false);
@@ -189,11 +192,11 @@ export default function Clients() {
               <Users className="h-4 w-4" />
             </span>
             <span className="text-[9.5px] text-amber-500 font-extrabold uppercase tracking-widest font-mono">
-              {t('खता बुक प्रबंधन')}
+              खता बुक प्रबंधन
             </span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-white font-sans flex items-center">
-            {t('ग्राहक खाता बुक (My Clients)')}
+            ग्राहक खाता बुक (My Clients)
           </h2>
           <p className="text-xs text-gray-550">
             {supabaseMode 
@@ -242,7 +245,7 @@ export default function Clients() {
         </div>
 
         <span className="text-xs text-gray-450 font-black">
-          {t('सक्रिय सूची: ')} {filteredAndMappedClients.length} {t('ग्राहक खाते')}
+          सक्रिय सूची: {filteredAndMappedClients.length} ग्राहक खाते
         </span>
       </div>
 
@@ -293,7 +296,7 @@ export default function Clients() {
           <Users className="h-10 w-10 text-gray-600 mx-auto" />
           <h4 className="text-xs font-bold text-gray-300">{t('कोई ग्राहक खाता नहीं मिला (No Results)')}</h4>
           <p className="text-[10px] text-gray-550 max-w-sm mx-auto">
-            {t('सर्च की जाँच करें या एक नया ग्राहक खाता खोलने के लिए नीचे दिए गए प्लस (+) बटन पर टैप करें।')}
+            सर्च की जाँच करें या एक नया ग्राहक खाता खोलने के लिए नीचे दिए गए प्लस (+) बटन पर टैप करें।
           </p>
         </div>
       ) : (

@@ -7,7 +7,9 @@ import AttendanceCalendar from '../components/labour/AttendanceCalendar';
 import SalarySummary from '../components/labour/SalarySummary';
 import { UserCheck, ShieldAlert, Wifi, WifiOff } from 'lucide-react';
 
+
 export default function Labour() {
+
   const store = useAppStore();
 
   const [workers, setWorkers] = useState<any[]>([]);

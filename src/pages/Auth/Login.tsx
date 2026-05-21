@@ -4,7 +4,9 @@ import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { LogIn, Mail, Lock, ShieldCheck, Chrome } from 'lucide-react';
 
+
 export default function Login() {
+
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

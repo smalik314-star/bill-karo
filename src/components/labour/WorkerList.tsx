@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Users, Plus, Trash2, Phone, DollarSign, Search, UserCheck, X, Award } from 'lucide-react';
 
+
 export interface WorkerProps {
   workers: any[];
   onAddWorker: (name: string, dailyRate: number, phone: string) => Promise<void>;
@@ -9,6 +10,7 @@ export interface WorkerProps {
 }
 
 export default function WorkerList({ workers, onAddWorker, onDeleteWorker, loading }: WorkerProps) {
+
   const [showAddForm, setShowAddForm] = useState(false);
   const [name, setName] = useState('');
   const [dailyRate, setDailyRate] = useState('500');

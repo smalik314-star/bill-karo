@@ -21,7 +21,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
 export default function ProfitCalculator() {
+
   const store = useAppStore();
   
   // Custom states

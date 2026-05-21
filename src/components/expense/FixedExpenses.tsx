@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, Bell, AlertTriangle, CreditCard, CheckCircle2, Calendar, HelpCircle, X, ShieldAlert } from 'lucide-react';
 
+
 interface FixedExpensesProps {
   fixedExpenses: any[];
   onAddFixedExpense: (name: string, amount: number, frequency: 'Monthly' | 'Quarterly', dueDate: string) => Promise<void>;
@@ -16,6 +17,7 @@ export default function FixedExpenses({
   onDeleteFixedExpense,
   loading
 }: FixedExpensesProps) {
+
   
   const [showAddForm, setShowAddForm] = useState(false);
   const [name, setName] = useState('');

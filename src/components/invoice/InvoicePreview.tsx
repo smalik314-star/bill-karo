@@ -23,12 +23,14 @@ import { toast } from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+
 interface InvoicePreviewProps {
   invoice: Invoice;
   onClose: () => void;
 }
 
 export default function InvoicePreview({ invoice, onClose }: InvoicePreviewProps) {
+
   const { profile, clients } = useAppStore();
   const printRef = useRef<HTMLDivElement>(null);
 

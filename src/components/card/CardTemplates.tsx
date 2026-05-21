@@ -1,6 +1,8 @@
 import React from 'react';
 import { Phone, MapPin, Globe, CreditCard, Sparkles, Shield, User, Star } from 'lucide-react';
 
+
+
 export interface CardData {
   businessName: string;
   ownerName: string;
@@ -21,6 +23,7 @@ interface TemplateProps {
 
 // 1. Bold Template (dark + orange)
 export function BoldTemplate({ data, size, showWatermark }: TemplateProps) {
+
   const containerClass = "bg-gray-950 text-white relative w-full h-full flex flex-col justify-between font-sans overflow-hidden p-[6%]";
   const accentText = "text-orange-500";
   const accentBg = "bg-orange-500 text-black";
@@ -207,6 +210,7 @@ export function BoldTemplate({ data, size, showWatermark }: TemplateProps) {
 
 // 2. Minimal Template (white + black)
 export function MinimalTemplate({ data, size, showWatermark }: TemplateProps) {
+
   const containerClass = "bg-white text-black relative w-full h-full flex flex-col justify-between font-sans overflow-hidden p-[6%] border border-gray-200/40";
 
   if (size === 'facebook') {
@@ -367,6 +371,7 @@ export function MinimalTemplate({ data, size, showWatermark }: TemplateProps) {
 
 // 3. Classic Template (navy + gold)
 export function ClassicTemplate({ data, size, showWatermark }: TemplateProps) {
+
   const containerClass = "bg-[#0b1b3d] text-[#e5c158] relative w-full h-full flex flex-col justify-between font-serif overflow-hidden p-[6%] border border-[#e5c158]/20";
 
   if (size === 'facebook') {
@@ -529,6 +534,7 @@ export function ClassicTemplate({ data, size, showWatermark }: TemplateProps) {
 
 // 4. Colorful Template (gradient)
 export function ColorfulTemplate({ data, size, showWatermark }: TemplateProps) {
+
   const containerClass = "bg-gradient-to-tr from-purple-800 via-rose-700 to-amber-500 text-white relative w-full h-full flex flex-col justify-between font-sans overflow-hidden p-[6%]";
 
   if (size === 'facebook') {
@@ -691,6 +697,7 @@ export function ColorfulTemplate({ data, size, showWatermark }: TemplateProps) {
 
 // 5. Professional Template (grey + blue)
 export function ProfessionalTemplate({ data, size, showWatermark }: TemplateProps) {
+
   const containerClass = "bg-slate-900 text-slate-100 relative w-full h-full flex flex-col justify-between font-sans overflow-hidden p-[6%] border border-blue-500/20";
 
   if (size === 'facebook') {
@@ -851,6 +858,7 @@ export function ProfessionalTemplate({ data, size, showWatermark }: TemplateProp
 
 // 6. Desi Template (saffron + green)
 export function DesiTemplate({ data, size, showWatermark }: TemplateProps) {
+
   const containerClass = "bg-[#fffdf6] text-[#134226] relative w-full h-full flex flex-col justify-between font-sans overflow-hidden p-[6%] border-t-[8px] border-t-orange-500 border-b-[8px] border-b-emerald-600";
 
   if (size === 'facebook') {

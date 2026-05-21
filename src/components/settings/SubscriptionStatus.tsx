@@ -3,11 +3,13 @@ import useAppStore from '../../store';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Zap, Award, CheckCircle2, AlertTriangle, ArrowRight, HelpCircle } from 'lucide-react';
 
+
 interface SubscriptionStatusProps {
   onUpgradeClick?: () => void;
 }
 
 export default function SubscriptionStatus({ onUpgradeClick }: SubscriptionStatusProps) {
+
   const { subscription, invoices, setSubscription } = useAppStore();
   const navigate = useNavigate();
 

@@ -6,7 +6,9 @@ import toast, { Toaster } from 'react-hot-toast';
 import BusinessProfile from '../components/settings/BusinessProfile';
 import SubscriptionStatus from '../components/settings/SubscriptionStatus';
 
+
 export default function Settings() {
+
   const { profitPin, updateProfitPin, subscription } = useAppStore();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'billing' | 'security'>('profile');

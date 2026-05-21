@@ -17,11 +17,13 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
+
   const navigate = useNavigate();
   const location = useLocation();
   const [session, setSession] = useState<any>(null);

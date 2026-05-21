@@ -4,6 +4,8 @@ import { Phone, Calendar, ArrowRight, User, AlertTriangle, CheckCircle, Clock } 
 import { motion } from 'motion/react';
 import { Client } from '../../types';
 
+
+
 interface ClientCardProps {
   client: Client & {
     address?: string;

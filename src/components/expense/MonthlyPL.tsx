@@ -1,6 +1,7 @@
 import React from 'react';
 import { TrendingUp, ArrowUpRight, ArrowDownLeft, Landmark, DollarSign } from 'lucide-react';
 
+
 interface MonthlyPLProps {
   invoices: any[];
   expenses: any[];
@@ -16,6 +17,7 @@ export default function MonthlyPL({
   filterMonth,
   filterYear
 }: MonthlyPLProps) {
+
   
   // 1. Calculate Total Income: sum of all invoices matching filterMonth and filterYear
   const monthlyInvoices = invoices.filter(inv => {

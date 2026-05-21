@@ -5,7 +5,9 @@ import { toast } from 'react-hot-toast';
 import { UserPlus, Mail, Lock, Phone, User, Briefcase, Globe, ShieldCheck } from 'lucide-react';
 import { useAppStore } from '../../store';
 
+
 export default function Register() {
+
   const navigate = useNavigate();
   const updateProfile = useAppStore((state) => state.updateProfile);
 
@@ -275,6 +277,7 @@ export default function Register() {
 }
 
 function UserCheck(props: React.SVGProps<SVGSVGElement>) {
+
   return (
     <svg
       {...props}

@@ -3,6 +3,8 @@ import { ArrowDownToLine, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Button from './Button';
 
+
+
 export const PWAInstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(false);

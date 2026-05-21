@@ -22,6 +22,7 @@ import { toast } from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
+
 interface QuotationPreviewProps {
   quotation: Quotation;
   onConvert: () => void;
@@ -29,6 +30,7 @@ interface QuotationPreviewProps {
 }
 
 export default function QuotationPreview({ quotation, onConvert, onClose }: QuotationPreviewProps) {
+
   const { profile, clients } = useAppStore();
   const printRef = useRef<HTMLDivElement>(null);
 

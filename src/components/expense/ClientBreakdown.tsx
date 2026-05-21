@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, FileSpreadsheet, ArrowUpRight, ArrowDownRight, CreditCard } from 'lucide-react';
 
+
 interface ClientBreakdownProps {
   clients: any[];
   invoices: any[];
@@ -14,6 +15,7 @@ export default function ClientBreakdown({
   filterMonth,
   filterYear
 }: ClientBreakdownProps) {
+
   
   // Group invoices by client for selected month
   const monthlyInvoices = invoices.filter(inv => {

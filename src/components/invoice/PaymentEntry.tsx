@@ -23,12 +23,14 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import { supabase } from '../../lib/supabase';
 
+
 interface PaymentEntryProps {
   invoice: Invoice;
   onClose: () => void;
 }
 
 export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
+
   const { profile, clients, updateInvoice, updateClient, addTransaction } = useAppStore();
   const receiptPrintRef = useRef<HTMLDivElement>(null);
 

@@ -16,13 +16,15 @@ import {
   Building, 
   ChevronLeft, 
   ChevronRight, 
-  ShieldAlert, 
   LogOut,
   Sparkles
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
+
+
 export default function Sidebar() {
+
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -66,46 +68,46 @@ export default function Sidebar() {
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
         {!collapsed && (
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-amber-500/10 border border-amber-500/25 flex items-center justify-center rounded-xl text-amber-500">
-              <Sparkles className="h-4.5 w-4.5" />
+            <div className="h-8 w-8 bg-[rgba(255,255,255,0.15)] border border-transparent flex items-center justify-center rounded-xl text-[#FFFFFF]">
+              <Sparkles className="h-4.5 w-4.5 text-[#FFFFFF]" />
             </div>
-            <span className="font-extrabold tracking-tight text-white text-base font-sans">
-              Bill<span className="text-amber-500">Karo</span>
+            <span className="font-extrabold tracking-tight text-[#FFFFFF] text-base font-sans">
+              Bill<span className="text-[#FFFFFF]">Karo</span>
             </span>
           </div>
         )}
         
         {collapsed && (
-          <div className="mx-auto h-8 w-8 bg-amber-500/10 border border-amber-500/25 flex items-center justify-center rounded-xl text-amber-500">
-            <Sparkles className="h-4.5 w-4.5" />
+          <div className="mx-auto h-8 w-8 bg-[rgba(255,255,255,0.15)] border border-transparent flex items-center justify-center rounded-xl text-[#FFFFFF]">
+            <Sparkles className="h-4.5 w-4.5 text-[#FFFFFF]" />
           </div>
         )}
 
         <button 
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 hover:bg-gray-850 rounded-lg text-gray-200 hover:text-amber-400 transition cursor-pointer"
+          className="p-1.5 hover:bg-[rgba(255,255,255,0.15)] rounded-lg text-[#FFFFFF] hover:text-[#FFFFFF] transition cursor-pointer"
         >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          {collapsed ? <ChevronRight className="h-4 w-4 text-[#FFFFFF]" /> : <ChevronLeft className="h-4 w-4 text-[#FFFFFF]" />}
         </button>
       </div>
 
       {/* User profile brief & subscription status */}
-      <div className="p-4 border-b border-gray-800 bg-[#0B0F1A]/30">
+      <div className="p-4 border-b border-gray-800 bg-[rgba(255,255,255,0.05)]">
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-black font-black text-sm border-2 border-gray-800">
+          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-[#FFFFFF] font-black text-sm border-2 border-gray-800">
             {profile.ownerName?.charAt(0) || 'B'}
           </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <h4 className="text-xs font-black text-gray-100 truncate">{profile.ownerName || 'Ledger Owner'}</h4>
-              <p className="text-[10px] text-gray-300 truncate">{profile.businessName || 'Business Name'}</p>
+              <h4 className="text-xs font-black text-[#FFFFFF] truncate">{profile.ownerName || 'Ledger Owner'}</h4>
+              <p className="text-[10px] text-[#FFFFFF] truncate">{profile.businessName || 'Business Name'}</p>
               
               {/* Badge */}
               <div className="flex items-center mt-1">
                 <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold ${
                   subscription === 'PRO' || subscription === 'YEARLY' 
-                    ? 'bg-amber-400/25 border border-amber-500/40 text-amber-400' 
-                    : 'bg-gray-800 text-gray-200 border border-gray-700'
+                    ? 'bg-[#F97316] border border-transparent text-[#FFFFFF]' 
+                    : 'bg-gray-800 text-[#FFFFFF] border border-gray-700'
                 }`}>
                   {subscription === 'PRO' || subscription === 'YEARLY' ? '⭐ PRO MEMBER' : 'FREE ACCOUNT'}
                 </span>
@@ -131,7 +133,7 @@ export default function Sidebar() {
             >
               <item.icon className="h-4.5 w-4.5 text-[#FFFFFF]" />
               {!collapsed && (
-                <span className="text-xs font-black truncate">{t(item.label)}</span>
+                <span className="text-xs font-black truncate text-[#FFFFFF]">{t(item.label)}</span>
               )}
             </button>
           );
@@ -142,11 +144,11 @@ export default function Sidebar() {
       <div className="p-4 border-t border-gray-800">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center space-x-3 p-2 hover:bg-red-500/15 hover:text-red-400 rounded-xl transition text-gray-200 cursor-pointer text-left"
+          className="w-full flex items-center space-x-3 p-2 hover:bg-[rgba(255,255,255,0.15)] hover:text-[#FFFFFF] rounded-xl transition text-[#FFFFFF] cursor-pointer text-left"
         >
-          <LogOut className="h-4.5 w-4.5 text-red-500" />
+          <LogOut className="h-4.5 w-4.5 text-[#FFFFFF]" />
           {!collapsed && (
-            <span className="text-xs font-black">{t('लॉगआउट (Log Out)')}</span>
+            <span className="text-xs font-black text-[#FFFFFF]">{t('लॉगआउट (Log Out)')}</span>
           )}
         </button>
       </div>

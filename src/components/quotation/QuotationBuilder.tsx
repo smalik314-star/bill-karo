@@ -21,6 +21,7 @@ import { useAppStore } from '../../store';
 import { BillItem, Quotation } from '../../types';
 import { toast } from 'react-hot-toast';
 
+
 interface QuotationBuilderProps {
   onSave: (quoteData: Omit<Quotation, 'id' | 'isConverted'> & { advanceAmount?: number; advanceMode?: 'Cash' | 'Online'; category?: string; conditions?: string[] }) => void;
   onCancel: () => void;
@@ -28,6 +29,7 @@ interface QuotationBuilderProps {
 }
 
 export default function QuotationBuilder({ onSave, onCancel, initialData }: QuotationBuilderProps) {
+
   const { clients, quotations } = useAppStore();
 
   // Basic Details

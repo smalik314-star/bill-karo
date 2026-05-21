@@ -25,6 +25,7 @@ import InvoicePreview from '../components/invoice/InvoicePreview';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 
+
 const mapDbInvoiceToUi = (inv: any): Invoice => {
   let paidSum = 0;
   let parsedPayments: any[] = [];
@@ -59,6 +60,7 @@ const mapDbInvoiceToUi = (inv: any): Invoice => {
 };
 
 export default function Invoices() {
+
   const { invoices: storeInvoices, clients: storeClients, addInvoice, updateInvoice, deleteInvoice } = useAppStore();
 
   const [supabaseMode, setSupabaseMode] = useState(false);

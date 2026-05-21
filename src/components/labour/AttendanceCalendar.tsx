@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon, CheckCheck, RefreshCw, ChevronLeft, ChevronRight, User, HelpCircle, ShieldAlert, Sparkles } from 'lucide-react';
 
+
 interface AttendanceCalendarProps {
   workers: any[];
   attendance: any[];
@@ -16,6 +17,7 @@ export default function AttendanceCalendar({
   onBulkMarkPresent,
   loading
 }: AttendanceCalendarProps) {
+
   
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedWorkerId, setSelectedWorkerId] = useState<string>('');

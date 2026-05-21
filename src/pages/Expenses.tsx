@@ -9,7 +9,9 @@ import ExpenseEntry from '../components/expense/ExpenseEntry';
 import FixedExpenses from '../components/expense/FixedExpenses';
 import ClientBreakdown from '../components/expense/ClientBreakdown';
 
+
 export default function Expenses() {
+
   const store = useAppStore();
 
   const [expenses, setExpenses] = useState<any[]>([]);
