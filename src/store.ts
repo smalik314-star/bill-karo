@@ -82,7 +82,8 @@ const DEFAULT_PROFILE: BusinessProfile = {
   accountNumber: '',
   ifscCode: '',
   upiId: '',
-  signatureText: ''
+  signatureText: '',
+  language: (localStorage.getItem('billkaro_language') as any) || 'Hinglish'
 };
 
 const INITIAL_CLIENTS: Client[] = [];
@@ -123,7 +124,13 @@ const saveStoredState = (key: string, data: any) => {
 
 export const useAppStore = create<AppState>((set, get) => ({
   // Loaded state
-  profile: getStoredState('profile', DEFAULT_PROFILE),
+  profile: (() => {
+    const prof = getStoredState('profile', DEFAULT_PROFILE);
+    if (!prof.language) {
+      prof.language = (localStorage.getItem('billkaro_language') as any) || 'Hinglish';
+    }
+    return prof;
+  })(),
   clients: getStoredState('clients', INITIAL_CLIENTS),
   quotations: getStoredState('quotations', INITIAL_QUOTATIONS),
   invoices: getStoredState('invoices', INITIAL_INVOICES),
@@ -139,6 +146,9 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   updateProfile: (profileUpdates) => set((state) => {
     const next = { ...state.profile, ...profileUpdates };
+    if (next.language) {
+      localStorage.setItem('billkaro_language', next.language);
+    }
     saveStoredState('profile', next);
     return { profile: next };
   }),

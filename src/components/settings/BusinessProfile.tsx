@@ -228,7 +228,20 @@ export default function BusinessProfile() {
                     <button
                       type="button"
                       key={langOption}
-                      onClick={() => setForm(prev => ({ ...prev, language: langOption as any }))}
+                      onClick={() => {
+                        const nextLang = langOption as any;
+                        setForm(prev => ({ ...prev, language: nextLang }));
+                        // Instantly save preference to global state & local storage for instant reactivity!
+                        updateProfile({ ...form, language: nextLang });
+                        localStorage.setItem('billkaro_language', nextLang);
+                        toast.success(
+                          nextLang === 'Hindi' 
+                            ? 'भाषा बदलकर हिंदी कर दी गई है!' 
+                            : nextLang === 'English' 
+                              ? 'Language preference updated to English!' 
+                              : 'Language preference updated to Hinglish!'
+                        );
+                      }}
                       className={`py-2 px-3 rounded-lg text-center text-[11px] font-bold transition cursor-pointer ${
                         isActive 
                           ? 'bg-amber-500 text-black font-extrabold shadow-md' 

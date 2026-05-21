@@ -1,5 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import useAppStore from '../store';
+
+const HINDI_RANGE_REGEX = /[\u0900-\u097F]/;
+const ENGLISH_RANGE_REGEX = /[a-zA-Z]/;
 
 // Dictionary of purely-English to Hindi/Hinglish and purely-Hindi to English/Hinglish
 const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hinglish', string>> = {
@@ -155,36 +158,213 @@ const TRANSLATION_DICTIONARY: Record<string, Record<'Hindi' | 'English' | 'Hingl
     Hindi: "नया दैनिक खर्च्चा बही में जोड़ लिया गया है!",
     English: "New operational expense added to the ledger successfully!",
     Hinglish: "नया दैनिक खर्च्चा (Expense) बही में सफलतापूर्वक जोड़ लिया गया है!"
+  },
+
+  // Newly requested translations / Common UI labels
+  "लेबर और हाज़िरी रजिस्टर": {
+    Hindi: "लेबर और हाज़िरी रजिस्टर",
+    English: "Labour & Attendance Register",
+    Hinglish: "लेबर और हाज़िरी रजिस्टर (Labour Roster)"
+  },
+  "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (हिसाब-किताब) व्यवस्थित करें।": {
+    Hindi: "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन व्यवस्थित करें।",
+    English: "Mark daily worker attendance, view monthly calendar, and manage salaries.",
+    Hinglish: "कारीगरों की दैनिक हाजिरी लगाएं, मासिक कैलेंडर देखें और वेतन (Payroll) व्यवस्थित करें।"
+  },
+  "क्लाउड डेटाबेस सक्रिय (Sync Active)": {
+    Hindi: "क्लाउड डेटाबेस सक्रिय",
+    English: "Cloud Database Active",
+    Hinglish: "क्लाउड डेटाबेस सक्रिय (Sync Active)"
+  },
+  "लोकल मोड सक्रिय (Local Offline Book)": {
+    Hindi: "लोकल मोड सक्रिय",
+    English: "Local Offline Mode Active",
+    Hinglish: "लोकल मोड सक्रिय (Local Offline Book)"
+  },
+  "📅 हाज़िरी कैलेंडर (Monthly & Bulk)": {
+    Hindi: "📅 हाज़िरी कैलेंडर",
+    English: "📅 Attendance Calendar",
+    Hinglish: "📅 हाज़िरी कैलेंडर (Monthly & Bulk)"
+  },
+  "👷 कारीगर प्रबंधक (Manage Workers)": {
+    Hindi: "👷 कारीगर प्रबंधक",
+    English: "👷 Manage Workers",
+    Hinglish: "👷 कारीगर प्रबंधक (Manage Workers)"
+  },
+  "💰 हिसाब और सैलरी (Payroll Book)": {
+    Hindi: "💰 हिसाब और सैलरी",
+    English: "💰 Salary & Payroll",
+    Hinglish: "💰 हिसाब और सैलरी (Payroll Book)"
+  },
+  "प्रीमियम विज़िटिंग कार्ड स्टूडियो (Premium Visiting Card Maker)": {
+    Hindi: "प्रीमियम विज़िटिंग कार्ड स्टूडियो",
+    English: "Premium Visiting Card Maker",
+    Hinglish: "प्रीमियम विज़िटिंग कार्ड स्टूडियो (Card Maker)"
+  },
+  "अपने व्यापार के लिए आधुनिक डिजिटल विज़िटिंग कार्ड डिज़ाइन करें। अलग-अलग सोशल मीडिया साइज में उच्च गुणवत्ता (PNG) डाउनलोड करें।": {
+    Hindi: "अपने व्यापार के लिए आधुनिक डिजिटल विज़िटिंग कार्ड डिज़ाइन करें और उच्च गुणवत्ता में डाउनलोड करें।",
+    English: "Design a modern digital visiting card for your business. Download in high quality PNG format.",
+    Hinglish: "अपने व्यापार के लिए आधुनिक डिजिटल विज़िटिंग कार्ड (Digital Card) डिज़ाइन करें। उच्च गुणवत्ता (PNG) डाउनलोड करें।"
+  },
+  "लाइव कार्ड मॉकअप (Mockup Preview)": {
+    Hindi: "लाइव कार्ड मॉकअप",
+    English: "Live Card Mockup",
+    Hinglish: "लाइव कार्ड मॉकअप (Mockup Preview)"
+  },
+  "डिज़ाइन थीम चुनें (Select Template Preset)": {
+    Hindi: "डिज़ाइन थीम चुनें",
+    English: "Select Design Template",
+    Hinglish: "डिज़ाइन थीम चुनें (Select Template Preset)"
+  },
+  "कर एवं पक्के बिल (Tax Invoices Ledger)": {
+    Hindi: "कर एवं पक्के बिल",
+    English: "Tax Invoices Ledger",
+    Hinglish: "कर एवं पक्के बिल (Tax Invoices Ledger)"
+  },
+  "नया इनवॉइस बनाएँ (Create Invoice)": {
+    Hindi: "नया इनवॉइस बनाएँ",
+    English: "Create New Invoice",
+    Hinglish: "नया इनवॉइस बनाएँ (Create Invoice)"
+  },
+  "इनवॉइस फ़िल्टर एवं खोज उपकरण (Filter & Sort Desk)": {
+    Hindi: "इनवॉइस फ़िल्टर एवं खोज उपकरण",
+    English: "Invoice Filter & Sort Settings",
+    Hinglish: "इनवॉइस फ़िल्टर एवं खोज उपकरण (Filter & Sort Desk)"
+  },
+  "सभी भुगतान श्रेणियाँ (All Statuses)": {
+    Hindi: "सभी भुगतान श्रेणियाँ",
+    English: "All Payment Statuses",
+    Hinglish: "सभी भुगतान श्रेणियाँ (All Statuses)"
+  },
+  "सभी टैक्स प्रकार (All Bil types)": {
+    Hindi: "सभी टैक्स प्रकार",
+    English: "All Invoice/Tax Types",
+    Hinglish: "सभी टैक्स प्रकार (All Bill types)"
+  },
+  "जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया!": {
+    Hindi: "जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया!",
+    English: "GST Invoice saved successfully!",
+    Hinglish: "GST इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया!"
+  },
+  "इनवॉइस सफलतापूर्वक अपडेट हो चूका है!": {
+    Hindi: "इनवॉइस सफलतापूर्वक अपडेट हो चुका है!",
+    English: "Invoice updated successfully!",
+    Hinglish: "इनवॉइस सफलतापूर्वक अपडेट हो चुका है!"
+  },
+  "प्रोफाइल डेटा सफलता पूर्वक अपडेट हो गया!": {
+    Hindi: "प्रोफाइल डेटा सफलता पूर्वक अपडेट हो गया!",
+    English: "Profile details updated successfully!",
+    Hinglish: "प्रोफाइल डेटा सफलता पूर्वक अपडेट हो गया!"
+  },
+  "हाज़िरी सिंक हो गयी!": {
+    Hindi: "हाज़िरी सिंक हो गयी!",
+    English: "Attendance synced successfully!",
+    Hinglish: "हाज़िरी सिंक हो गयी!"
+  },
+  "हाज़िरी लगाने के लिए कोई कारीगर नहीं है!": {
+    Hindi: "हाज़िरी लगाने के लिए कोई कारीगर नहीं है!",
+    English: "No workers available to mark attendance!",
+    Hinglish: "हाज़िरी लगाने के लिए कोई कारीगर नहीं है!"
+  },
+  "हाजिरी भरें": {
+    Hindi: "हाजिरी भरें",
+    English: "Mark Attendance",
+    Hinglish: "हाजिरी भरें (Mark Attendance)"
   }
 };
 
-/**
- * Clean up a translation string of any surrounding formatting like * or :
- */
-const cleanup = (text: string): string => {
-  return text.trim();
+const HINDI_TO_ENGLISH_VOCAB: Record<string, string> = {
+  "डैशबोर्ड": "Dashboard",
+  "ग्राहक": "Client",
+  "ग्राहक खाता": "Client Accounts",
+  "एस्टीमेट": "Quotation",
+  "पक्का बिल": "Invoice",
+  "प्राइवेट बचत": "Estimate Margin",
+  "हाज़िरी": "Attendance",
+  "हाज़िरी रजिस्टर": "Labour Attendance",
+  "कमार्इ-खर्चा": "Expense Book",
+  "डिजिटल कार्ड": "Visiting Card",
+  "स्टॉक माल": "Inventory",
+  "सेटिंग्स": "Settings",
+  "प्रोफाइल": "Profile",
+  "सेटिंग्स और प्रोफाइल": "Settings",
+  "लॉगआउट": "Log Out",
+  "अधिक": "More",
+  "जोड़ें": "Add",
+  "हस्ताक्षर": "Signature",
+  "बकाया": "Outstanding Due",
+  "बकाया बैलेंस": "Outstanding Balance Dues",
+  "खर्च": "Expense",
+  "खर्चे": "Expenses",
+  "सैलरी": "Salary",
+  "वेतन": "Salaries",
+  "मजदूरी": "Labour charges",
+  "दाम": "Rate",
+  "मात्रा": "Quantity",
+  "विवरण": "Description",
+  "कर": "GST",
+  "कुल": "Total",
+  "योग": "Sum",
+  "बचत": "Margin/Profit",
+  "डिजिटल विज़िटिंग कार्ड": "Digital Visiting Card",
+  "दैनिक हाजिरी": "Daily Attendance",
+  "मासिक कैलेंडर": "Monthly Calendar",
+  "वेतन भुगतान": "Salary Payment",
+  "सक्रिय कारीगर": "Active Workers",
+  "प्रबंधक": "Manager",
+  "नया कारीगर": "New Worker",
+  "सर्च": "Search",
+  "विवरण एवं दाम": "Details & Rates",
+  "दुकान": "Shop",
+  "बही खाता": "Ledger Book",
+  "पक्का बिल / इनवॉइस": "Tax Invoice",
+  "इनवॉइस": "Invoice",
+  "कोटेशन प्रपत्र": "Quotation / Estimate Form",
+  "हस्ताक्षर और मुहर": "Authorized Signatory",
+  "प्रोफाइल डेटा से लाइव ऑटो-फिल हो गया है!": "Live auto-filled from profile!",
+  "डिजिटल विज़िटिंग कार्ड डिज़ाइन थीम चुनें (Select Template Preset)": "Select digital visiting card design template",
+  "नया दैनिक खर्च्चा बही में जोड़ लिया गया है": "New direct expense recorded successfully!",
+  "खर्चा और मुनाफ़ा रजिस्टर": "Expense & Profit Register",
+  "सभी प्रत्यक्ष खर्चे, किराया/मशीनें/बिजली के बँधे मासिक खर्चे लिखें, और नेट मुनाफ़े (P&L) का विश्लेषण करें।": "Write all direct expenses, rent/machinery/electricity monthly expenses, and analyze net profit & loss.",
+  "क्लाउड डेटाबेस सक्रिय (Sync Active)": "Cloud database sync active",
+  "लोकल मोड सक्रिय (Local Offline Book)": "Local offline ledger book active",
+  "📅 हाज़िरी कैलेंडर": "📅 Attendance Calendar",
+  "👷 कारीगर प्रबंधक": "👷 Manage Workers",
+  "💰 हिसाब और सैलरी": "💰 Payroll & Salary",
+  "लेबर और हाज़िरी रजिस्टर (Labour Roster Suite)": "Labour & Attendance Register",
+  "लेबर और हाज़िरी रजिस्टर": "Labour & Attendance Register",
+  "प्रणाली एवं भाषा प्राथमिकता (System & Language Settings)": "System & Language Settings",
+  "एप्लीकेशन की डिफ़ॉल्ट भाषा (In-app Preferred language)": "In-app Preferred Language",
+  "यह सेटिंग आपके इनवॉइस जनरेटर, खतौनी और रसीद स्क्रीन के हिंदी/इंग्लिश अनुवाद को प्रभावित करेगी।": "This setting globally updates translations across invoices, ledgers, and setting screens."
 };
 
-/**
- * Resolve brackets inside text helper
- */
-const resolveSingleText = (part: string, lang: 'Hindi' | 'English'): string => {
-  const cleanPart = part.trim();
-  const bracketMatch = cleanPart.match(/^([^\(]+)\(([^)]+)\)(.*)$/);
-  if (bracketMatch) {
-    const leftPart = bracketMatch[1].trim();
-    const insidePart = bracketMatch[2].trim();
-    const rightPart = bracketMatch[3].trim();
-    const leftHasHindi = /[\u0900-\u097F]/.test(leftPart);
-    if (leftHasHindi) {
-      if (lang === 'English') {
-        return cleanup(insidePart + (rightPart ? ' ' + rightPart : ''));
-      } else {
-        return cleanup(leftPart + (rightPart ? ' ' + rightPart : ''));
-      }
-    }
-  }
-  return cleanPart;
+const ENGLISH_TO_HINDI_VOCAB: Record<string, string> = {
+  "Dashboard": "डैशबोर्ड",
+  "Clients": "ग्राहक",
+  "Client Accounts": "ग्राहक खाता",
+  "Quotations": "एस्टीमेट",
+  "Invoice": "पक्का बिल",
+  "Invoices": "पक्के बिल",
+  "Estimate Margin": "प्राइवेट बचत",
+  "Attendance": "हाज़िरी",
+  "Labour Attendance": "हाज़िरी रजिस्टर",
+  "Expense Book": "कमार्इ-खर्चा",
+  "Visiting Card": "डिजिटल कार्ड",
+  "Inventory": "स्टॉक माल",
+  "Settings": "सेटिंग्स",
+  "Profile": "प्रोफाइल",
+  "Log Out": "लॉगआउट",
+  "More": "अधिक",
+  "Add": "जोड़ें",
+  "Signature": "हस्ताक्षर",
+  "Outstanding Due": "बकाया",
+  "Salaries": "वेतन",
+  "Labour charges": "मजदूरी",
+  "Description": "विवरण",
+  "GST": "कर",
+  "Total": "कुल",
+  "Search": "सर्च",
+  "Tax Invoice": "पक्का बिल / इनवॉइस"
 };
 
 /**
@@ -206,39 +386,85 @@ export const translateText = (text: string, lang: 'Hindi' | 'English' | 'Hinglis
     return text;
   }
 
-  const hasHindi = /[\u0900-\u097F]/.test(cleanInput);
-  const hasEnglish = /[a-zA-Z]/.test(cleanInput);
-
-  // 3. Bilingual pattern splitting
-  if (hasHindi && hasEnglish) {
-    // A. Slashes like "नाम / Name" or "नाम (Name) / पता (Address)"
-    if (cleanInput.includes('/')) {
-      const parts = cleanInput.split('/');
-      const firstHasHindi = /[\u0900-\u097F]/.test(parts[0]);
-      if (firstHasHindi && parts.length >= 2) {
-        if (lang === 'English') {
-          return resolveSingleText(parts.slice(1).join('/'), 'English');
-        }
-        if (lang === 'Hindi') {
-          return resolveSingleText(parts[0], 'Hindi');
-        }
-      }
-    }
-
-    // B. Brackets like "डैशबोर्ड (Overview)" or "ग्राहक खाता (Clients)" or "यहाँ नया अकाउंट बनाएं (Register)"
-    const resolvedSimple = resolveSingleText(cleanInput, lang === 'English' ? 'English' : 'Hindi');
-    if (resolvedSimple !== cleanInput) {
-      return resolvedSimple;
+  // 3. Extract emojis or icons at the start to ensure they are preserved cleanly
+  const firstChar = cleanInput.charAt(0);
+  const isEmoji = firstChar && (
+    (firstChar >= '\u2100' && firstChar <= '\u27BF') ||
+    (firstChar >= '\uD800' && firstChar <= '\uDBFF')
+  );
+  let emojiPart = '';
+  let mainPart = cleanInput;
+  if (isEmoji) {
+    const spaceMatch = cleanInput.match(/^([^\s]+\s*)/);
+    if (spaceMatch) {
+      emojiPart = spaceMatch[1];
+      mainPart = cleanInput.substring(emojiPart.length);
     }
   }
 
-  // 4. Default return (fallback when no specific translations or patterns apply)
+  // 4. Bilingual parenthesis pattern like "डैशबोर्ड (Overview)" or "ग्राहक खाता (Clients)"
+  const parenRegex = /^([^\(]+)\(([^)]+)\)(.*)$/;
+  const pMatch = mainPart.match(parenRegex);
+  if (pMatch) {
+    const left = pMatch[1].trim();
+    const inside = pMatch[2].trim();
+    const right = pMatch[3].trim();
+    const leftHasHindi = HINDI_RANGE_REGEX.test(left);
+    const insideHasHindi = HINDI_RANGE_REGEX.test(inside);
+
+    if (leftHasHindi && !insideHasHindi) {
+      if (lang === 'Hindi') {
+        return emojiPart + left + (right ? ' ' + translateText(right, lang) : '');
+      } else {
+        return emojiPart + inside + (right ? ' ' + translateText(right, lang) : '');
+      }
+    }
+    if (!leftHasHindi && insideHasHindi) {
+      if (lang === 'Hindi') {
+        return emojiPart + inside + (right ? ' ' + translateText(right, lang) : '');
+      } else {
+        return emojiPart + left + (right ? ' ' + translateText(right, lang) : '');
+      }
+    }
+  }
+
+  // 5. Bilingual slashes like "नाम / Name" or "नाम (Name) / पता (Address)"
+  if (mainPart.includes('/')) {
+    const parts = mainPart.split('/');
+    if (parts.length === 2) {
+      const p1 = parts[0].trim();
+      const p2 = parts[1].trim();
+      const p1Hindi = HINDI_RANGE_REGEX.test(p1);
+      const p2Hindi = HINDI_RANGE_REGEX.test(p2);
+
+      if (p1Hindi && !p2Hindi) {
+        return lang === 'Hindi' ? emojiPart + p1 : emojiPart + p2;
+      }
+      if (!p1Hindi && p2Hindi) {
+        return lang === 'Hindi' ? emojiPart + p2 : emojiPart + p1;
+      }
+    }
+  }
+
+  // 6. Vocabulary fallback mappings for pure words
+  if (HINDI_RANGE_REGEX.test(mainPart)) {
+    if (lang === 'English') {
+      return emojiPart + (HINDI_TO_ENGLISH_VOCAB[mainPart] || mainPart);
+    }
+  } else if (ENGLISH_RANGE_REGEX.test(mainPart)) {
+    if (lang === 'Hindi') {
+      return emojiPart + (ENGLISH_TO_HINDI_VOCAB[mainPart] || mainPart);
+    }
+  }
+
+  // 7. Default return (fallback)
   return text;
 };
 
 export const useTranslation = () => {
   const profile = useAppStore((state) => state.profile);
-  const language = (profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English';
+  const storedLang = localStorage.getItem('billkaro_language');
+  const language = (storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English';
 
   const t = useMemo(() => {
     return (text: string): string => translateText(text, language);
@@ -248,6 +474,165 @@ export const useTranslation = () => {
     language,
     t
   };
+};
+
+/**
+ * Global Real-Time DOM Translation engine for zero-gaps coverage
+ */
+export const useGlobalDOMTranslator = () => {
+  const profile = useAppStore((state) => state.profile);
+  const storedLang = localStorage.getItem('billkaro_language');
+  const language = (storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English';
+
+  useEffect(() => {
+    const translateNode = (node: Node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.nodeValue;
+        if (text && text.trim()) {
+          if (!(node as any).__originalValue) {
+            (node as any).__originalValue = text;
+          }
+          const original = (node as any).__originalValue;
+          
+          if (language === 'Hinglish') {
+            if (node.nodeValue !== original) {
+              node.nodeValue = original;
+            }
+          } else {
+            const translated = translateText(original, language);
+            if (node.nodeValue !== translated) {
+              node.nodeValue = translated;
+            }
+          }
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as HTMLElement;
+        
+        // Exclude specific translation-sensitive elements if necessary
+        if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE') return;
+
+        // Translate placeholders
+        const placeholder = element.getAttribute('placeholder');
+        if (placeholder && placeholder.trim()) {
+          if (!element.dataset.originalPlaceholder) {
+            element.dataset.originalPlaceholder = placeholder;
+          }
+          const original = element.dataset.originalPlaceholder;
+          if (language === 'Hinglish') {
+            if (element.getAttribute('placeholder') !== original) {
+              element.setAttribute('placeholder', original);
+            }
+          } else {
+            const translated = translateText(original, language);
+            if (element.getAttribute('placeholder') !== translated) {
+              element.setAttribute('placeholder', translated);
+            }
+          }
+        }
+
+        // Translate titles
+        const title = element.getAttribute('title');
+        if (title && title.trim()) {
+          if (!element.dataset.originalTitle) {
+            element.dataset.originalTitle = title;
+          }
+          const original = element.dataset.originalTitle;
+          if (language === 'Hinglish') {
+            if (element.getAttribute('title') !== original) {
+              element.setAttribute('title', original);
+            }
+          } else {
+            const translated = translateText(original, language);
+            if (element.getAttribute('title') !== translated) {
+              element.setAttribute('title', translated);
+            }
+          }
+        }
+
+        // Traverse child nodes
+        for (let i = 0; i < node.childNodes.length; i++) {
+          translateNode(node.childNodes[i]);
+        }
+      }
+    };
+
+    const restoreAllNodes = (root: Node) => {
+      if (root.nodeType === Node.TEXT_NODE) {
+        if ((root as any).__originalValue !== undefined) {
+          if (root.nodeValue !== (root as any).__originalValue) {
+            root.nodeValue = (root as any).__originalValue;
+          }
+        }
+      } else if (root.nodeType === Node.ELEMENT_NODE) {
+        const element = root as HTMLElement;
+        if (element.dataset.originalPlaceholder) {
+          element.setAttribute('placeholder', element.dataset.originalPlaceholder);
+        }
+        if (element.dataset.originalTitle) {
+          element.setAttribute('title', element.dataset.originalTitle);
+        }
+        for (let i = 0; i < root.childNodes.length; i++) {
+          restoreAllNodes(root.childNodes[i]);
+        }
+      }
+    };
+
+    // Perform translation / restoration
+    if (language === 'Hinglish') {
+      restoreAllNodes(document.body);
+    } else {
+      translateNode(document.body);
+    }
+
+    // Set up MutationObserver
+    const observer = new MutationObserver((mutations) => {
+      observer.disconnect();
+
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(node => {
+            if (language === 'Hinglish') {
+              restoreAllNodes(node);
+            } else {
+              translateNode(node);
+            }
+          });
+        } else if (mutation.type === 'characterData') {
+          const node = mutation.target;
+          const val = node.nodeValue;
+          if (val && val.trim()) {
+            const isOurTranslation = (node as any).__lastTranslated === val;
+            if (!isOurTranslation) {
+              (node as any).__originalValue = val;
+              if (language !== 'Hinglish') {
+                const translated = translateText(val, language);
+                (node as any).__lastTranslated = translated;
+                if (node.nodeValue !== translated) {
+                  node.nodeValue = translated;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [language]);
 };
 
 export default useTranslation;

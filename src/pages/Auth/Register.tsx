@@ -47,6 +47,7 @@ export default function Register() {
       }
 
       // 2. Local State Sync - Initialize the business profile with standard defaults plus custom register selections
+      localStorage.setItem('billkaro_language', language);
       updateProfile({
         businessName: businessName,
         ownerName: name,
@@ -58,6 +59,7 @@ export default function Register() {
         ifscCode: '',
         upiId: `${phone}@upi`,
         signatureText: name,
+        language: language as any,
       });
 
       // 3. Supabase tables writes (graceful insert of the user & business metadata, handling if Supabase settings are restricted or offline)

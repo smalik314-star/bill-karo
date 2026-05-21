@@ -18,9 +18,11 @@ import Pricing from './pages/Pricing';
 import AppLayout from './components/layout/AppLayout';
 import { Toaster } from 'react-hot-toast';
 import PWAInstallPrompt from './components/ui/PWAInstallPrompt';
+import { useGlobalDOMTranslator } from './hooks/useTranslation';
 
 function MainAppContent() {
   const navigate = useNavigate();
+  useGlobalDOMTranslator();
   
   return (
     <AppLayout>
