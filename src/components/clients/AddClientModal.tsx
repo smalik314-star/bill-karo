@@ -41,7 +41,7 @@ export default function AddClientModal({ isOpen, onClose, onSuccess }: AddClient
       if (user) {
         // Fetch user's business
         const { data: businessData, error: bErr } = await supabase
-          .from('businesses')
+          .from('profiles')
           .select('id')
           .eq('user_id', user.id);
 

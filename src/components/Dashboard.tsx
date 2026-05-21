@@ -62,7 +62,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
         // Fetch user's registered business
         const { data: businessData, error: bErr } = await supabase
-          .from('businesses')
+          .from('profiles')
           .select('*')
           .eq('user_id', user.id);
 

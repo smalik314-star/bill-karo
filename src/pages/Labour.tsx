@@ -30,7 +30,7 @@ export default function Labour() {
 
       // Fetch user's business
       const { data: bData, error: bErr } = await supabase
-        .from('businesses')
+        .from('profiles')
         .select('id')
         .eq('user_id', user.id);
 

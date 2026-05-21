@@ -140,14 +140,14 @@ export async function updateUserPlan(userId: string, plan: 'FREE' | 'PRO' | 'YEA
     if (user && user.id === userId) {
       // Find current active business ledger
       const { data: bData } = await supabase
-        .from('businesses')
+        .from('profiles')
         .select('id')
         .eq('user_id', user.id);
 
       if (bData && bData.length > 0) {
         const bId = bData[0].id;
         const { error } = await supabase
-          .from('businesses')
+          .from('profiles')
           .update({
             subscription_plan: plan,
             updated_at: new Date().toISOString()

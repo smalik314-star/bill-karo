@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 2. BUSINESSES Table
-CREATE TABLE IF NOT EXISTS businesses (
+-- 2. PROFILES Table
+CREATE TABLE IF NOT EXISTS profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
@@ -32,13 +32,13 @@ CREATE TABLE IF NOT EXISTS businesses (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Update users table self-reference foreign key after businesses table creation
-ALTER TABLE users ADD CONSTRAINT fk_user_business FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE SET NULL;
+-- Update users table self-reference foreign key after profiles table creation
+ALTER TABLE users ADD CONSTRAINT fk_user_business FOREIGN KEY (business_id) REFERENCES profiles(id) ON DELETE SET NULL;
 
 -- 3. CLIENTS Table
 CREATE TABLE IF NOT EXISTS clients (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     phone TEXT,
     address TEXT,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS clients (
 -- 4. QUOTATIONS Table
 CREATE TABLE IF NOT EXISTS quotations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
     number TEXT NOT NULL, -- e.g., 'EST-26-001'
     items JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array of items with name, rate, quantity, unit, gstPercent
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS quotations (
 -- 5. INVOICES Table
 CREATE TABLE IF NOT EXISTS invoices (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
     quotation_id UUID REFERENCES quotations(id) ON DELETE SET NULL,
     number TEXT NOT NULL, -- e.g., 'INV-2026-001'
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS profit_entries (
 -- 7. WORKERS Table
 CREATE TABLE IF NOT EXISTS workers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     daily_rate NUMERIC NOT NULL DEFAULT 0,
     phone TEXT,
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS attendance (
 -- 9. EXPENSES Table
 CREATE TABLE IF NOT EXISTS expenses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     category TEXT NOT NULL,
     amount NUMERIC NOT NULL DEFAULT 0,
     date DATE NOT NULL,
@@ -136,12 +136,12 @@ CREATE TABLE IF NOT EXISTS expenses (
 -- 10. FIXED_EXPENSES Table
 CREATE TABLE IF NOT EXISTS fixed_expenses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    business_id UUID REFERENCES businesses(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     amount NUMERIC NOT NULL DEFAULT 0,
     frequency TEXT DEFAULT 'Monthly', -- Monthly, Yearly, Weekly
     due_date TEXT, -- due day indicator, e.g., "5th of every month"
-    status TEXT DEFAULT 'Unpaid', -- Paid, Unpaid
+    status TEXT DEFAULT 'Unpaid', -- Paid, Unpaid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

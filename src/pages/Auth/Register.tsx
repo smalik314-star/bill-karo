@@ -75,7 +75,7 @@ export default function Register() {
 
         if (!userTableErr) {
           // Business record insertion
-          const { data: bData, error: bTableErr } = await supabase.from('businesses').insert([{
+          const { data: bData, error: bTableErr } = await supabase.from('profiles').insert([{
             user_id: user.id,
             name: businessName,
             owner: name,

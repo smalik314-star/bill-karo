@@ -124,7 +124,7 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
 
           // B. Add expense transaction (as incoming income)
           const { data: businesses } = await supabase
-            .from('businesses')
+            .from('profiles')
             .select('id')
             .eq('user_id', user.id);
           

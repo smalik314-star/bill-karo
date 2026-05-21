@@ -94,7 +94,7 @@ export default function Invoices() {
       }
 
       const { data: businesses, error: bErr } = await supabase
-        .from('businesses')
+        .from('profiles')
         .select('id')
         .eq('user_id', user.id);
 
