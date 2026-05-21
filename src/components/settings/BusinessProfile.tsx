@@ -111,14 +111,14 @@ export default function BusinessProfile() {
       if (user) {
         // Fetch active business id
         const { data: bData } = await supabase
-          .from('businesses')
+          .from('profiles')
           .select('id')
           .eq('user_id', user.id);
 
         if (bData && bData.length > 0) {
           const activeBId = bData[0].id;
           const { error } = await supabase
-            .from('businesses')
+            .from('profiles')
             .update({
               name: form.businessName,
               owner: form.ownerName,
