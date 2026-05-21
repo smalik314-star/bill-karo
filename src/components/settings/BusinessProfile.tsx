@@ -121,16 +121,16 @@ export default function BusinessProfile() {
             .from('businesses')
             .update({
               name: form.businessName,
-              owner_name: form.ownerName,
+              owner: form.ownerName,
               phone: form.phone,
               address: form.address,
-              gst_num: form.gstNumber,
-              is_gst_registered: form.isRegisteredGST,
-              bank_name: form.bankName,
-              acc_num: form.accountNumber,
-              ifsc: form.ifscCode,
+              gstin: form.gstNumber,
               upi_id: form.upiId,
-              signature_text: form.signatureText,
+              bank_details: {
+                bank_name: form.bankName,
+                account_number: form.accountNumber,
+                ifsc_code: form.ifscCode
+              },
               logo_url: form.logoUrl,
               language: form.language,
               updated_at: new Date().toISOString()

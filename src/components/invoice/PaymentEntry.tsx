@@ -21,6 +21,7 @@ import { Invoice, InvoicePayment } from '../../types';
 import { toast } from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { supabase } from '../../lib/supabase';
 
 interface PaymentEntryProps {
   invoice: Invoice;
@@ -108,7 +109,44 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
         notes: `Kaat ke jama (Payment) for Invoice #${invoice.invoiceNumber}. Receipt No: ${recNumber} by ${clientName}`
       });
 
-      toast.success(`भुगतान ₹{(amountVal ?? 0).toLocaleString('en-IN')} सफलतापूर्वक दर्ज हुआ!`);
+      // Try to sync to Supabase if logged in
+      const syncPaymentToSupabase = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          // A. Update invoice row
+          await supabase
+            .from('invoices')
+            .update({
+              payments: updatedPayments,
+              status: nextStatus
+            })
+            .eq('id', invoice.id);
+
+          // B. Add expense transaction (as incoming income)
+          const { data: businesses } = await supabase
+            .from('businesses')
+            .select('id')
+            .eq('user_id', user.id);
+          
+          if (businesses && businesses.length > 0) {
+            const bId = businesses[0].id;
+            await supabase
+              .from('expenses')
+              .insert({
+                business_id: bId,
+                category: 'Client Payment',
+                amount: amountVal,
+                date: payDate,
+                note: `Kaat ke jama (Payment) for Invoice #${invoice.invoiceNumber}. Receipt No: ${recNumber} by ${clientName}`,
+                type: 'Income'
+              });
+          }
+        }
+      };
+
+      syncPaymentToSupabase().catch((err) => console.warn('Supabase offline or background sync failed', err));
+
+      toast.success(`भुगतान ₹${(amountVal ?? 0).toLocaleString('en-IN')} सफलतापूर्वक दर्ज हुआ!`);
       
       // Set to view receipt instantly
       setSelectedReceipt(newPayment);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
   PlusCircle, 
@@ -23,9 +23,49 @@ import InvoiceBuilder from '../components/invoice/InvoiceBuilder';
 import PaymentEntry from '../components/invoice/PaymentEntry';
 import InvoicePreview from '../components/invoice/InvoicePreview';
 import { toast } from 'react-hot-toast';
+import { supabase } from '../lib/supabase';
+
+const mapDbInvoiceToUi = (inv: any): Invoice => {
+  let paidSum = 0;
+  let parsedPayments: any[] = [];
+  if (inv.payments) {
+    if (typeof inv.payments === 'string') {
+      try {
+        parsedPayments = JSON.parse(inv.payments);
+      } catch (e) {
+        parsedPayments = [];
+      }
+    } else if (Array.isArray(inv.payments)) {
+      parsedPayments = inv.payments;
+    }
+    paidSum = parsedPayments.reduce((s: number, p: any) => s + Number(p.amount || 0), 0);
+  }
+
+  return {
+    id: inv.id,
+    invoiceNumber: inv.number || inv.invoiceNumber || '',
+    clientId: inv.client_id || inv.clientId || '',
+    date: inv.created_at ? inv.created_at.split('T')[0] : (inv.date || new Date().toISOString().split('T')[0]),
+    dueDate: inv.due_date || inv.dueDate || new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    items: typeof inv.items === 'string' ? JSON.parse(inv.items) : (inv.items || []),
+    discount: Number(inv.discount || 0),
+    notes: inv.notes || '',
+    isGstApplied: inv.gst_percent > 0 || inv.isGstApplied || false,
+    totalAmount: Number(inv.grand_total || inv.totalAmount || 0),
+    paidAmount: paidSum,
+    status: inv.status || 'Unpaid',
+    payments: parsedPayments
+  };
+};
 
 export default function Invoices() {
-  const { invoices, clients, addInvoice, updateInvoice, deleteInvoice } = useAppStore();
+  const { invoices: storeInvoices, clients: storeClients, addInvoice, updateInvoice, deleteInvoice } = useAppStore();
+
+  const [supabaseMode, setSupabaseMode] = useState(false);
+  const [businessId, setBusinessId] = useState<string | null>(null);
+  const [dbInvoices, setDbInvoices] = useState<Invoice[]>([]);
+  const [dbClients, setDbClients] = useState<any[]>([]);
+  const [loadingDb, setLoadingDb] = useState(false);
 
   // Component views toggle
   const [activeView, setActiveView] = useState<'LIST' | 'CREATE' | 'EDIT'>('LIST');
@@ -41,17 +81,99 @@ export default function Invoices() {
   const [gstFilter, setGstFilter] = useState<string>('ALL'); // ALL, GST, NON_GST
   const [sortBy, setSortBy] = useState<string>('DATE_DESC');
 
+  const refreshInvoicesData = async () => {
+    try {
+      setLoadingDb(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setSupabaseMode(false);
+        setDbInvoices(storeInvoices);
+        setDbClients(storeClients);
+        setLoadingDb(false);
+        return;
+      }
+
+      const { data: businesses, error: bErr } = await supabase
+        .from('businesses')
+        .select('id')
+        .eq('user_id', user.id);
+
+      if (bErr || !businesses || businesses.length === 0) {
+        setSupabaseMode(false);
+        setDbInvoices(storeInvoices);
+        setDbClients(storeClients);
+        setLoadingDb(false);
+        return;
+      }
+
+      const activeBId = businesses[0].id;
+      setBusinessId(activeBId);
+
+      const [invoicesRes, clientsRes] = await Promise.all([
+        supabase.from('invoices').select('*').eq('business_id', activeBId),
+        supabase.from('clients').select('*').eq('business_id', activeBId)
+      ]);
+
+      if (!invoicesRes.error) {
+        const mapped = (invoicesRes.data || []).map(mapDbInvoiceToUi);
+        setSupabaseMode(true);
+        setDbInvoices(mapped);
+      } else {
+        setSupabaseMode(false);
+        setDbInvoices(storeInvoices);
+      }
+
+      if (!clientsRes.error) {
+        setDbClients(clientsRes.data || []);
+      } else {
+        setDbClients(storeClients);
+      }
+    } catch (e) {
+      console.error(e);
+      setSupabaseMode(false);
+      setDbInvoices(storeInvoices);
+      setDbClients(storeClients);
+    } finally {
+      setLoadingDb(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshInvoicesData();
+  }, [storeInvoices, storeClients]);
+
   // Statistics Calculations
-  const totalBilling = invoices.reduce((s, inv) => s + inv.totalAmount, 0);
-  const totalCollected = invoices.reduce((s, inv) => s + inv.paidAmount, 0);
+  const totalBilling = dbInvoices.reduce((s, inv) => s + inv.totalAmount, 0);
+  const totalCollected = dbInvoices.reduce((s, inv) => s + inv.paidAmount, 0);
   const totalOutstanding = Math.max(0, totalBilling - totalCollected);
-  const invoicesCount = invoices.length;
+  const invoicesCount = dbInvoices.length;
 
   // Handle Create Success
-  const handleCreateSave = (invoicePayload: Omit<Invoice, 'id'>) => {
+  const handleCreateSave = async (invoicePayload: Omit<Invoice, 'id'>) => {
     try {
-      addInvoice(invoicePayload);
-      toast.success('जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया!');
+      if (supabaseMode && businessId) {
+        const { error: insErr } = await supabase
+          .from('invoices')
+          .insert({
+            business_id: businessId,
+            client_id: invoicePayload.clientId,
+            number: invoicePayload.invoiceNumber,
+            items: invoicePayload.items,
+            subtotal: invoicePayload.items.reduce((s, i) => s + (i.rate * i.quantity), 0),
+            gst_percent: invoicePayload.isGstApplied ? 18 : 0,
+            gst_amount: invoicePayload.isGstApplied ? invoicePayload.items.reduce((s, i) => s + ((i.rate * i.quantity * i.gstPercent) / 100), 0) : 0,
+            discount: invoicePayload.discount,
+            grand_total: invoicePayload.totalAmount,
+            status: invoicePayload.status,
+            payments: invoicePayload.payments || []
+          });
+        if (insErr) throw insErr;
+        toast.success('जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया (Cloud)!');
+        refreshInvoicesData();
+      } else {
+        addInvoice(invoicePayload);
+        toast.success('जीएसटी इनवॉइस / पक्का बिल सुरक्षित सहेज लिया गया!');
+      }
       setActiveView('LIST');
     } catch (e: any) {
       toast.error('इनवॉइस सहेजने में त्रुटि!');
@@ -60,11 +182,30 @@ export default function Invoices() {
   };
 
   // Handle Edit Success
-  const handleEditSave = (invoicePayload: Omit<Invoice, 'id'>) => {
+  const handleEditSave = async (invoicePayload: Omit<Invoice, 'id'>) => {
     if (!editingInvoice) return;
     try {
-      updateInvoice(editingInvoice.id, invoicePayload);
-      toast.success('इनवॉइस सफलतापूर्वक अपडेट हो चूका है!');
+      if (supabaseMode) {
+        const { error: updErr } = await supabase
+          .from('invoices')
+          .update({
+            number: invoicePayload.invoiceNumber,
+            client_id: invoicePayload.clientId,
+            items: invoicePayload.items,
+            subtotal: invoicePayload.items.reduce((s, i) => s + (i.rate * i.quantity), 0),
+            grand_total: invoicePayload.totalAmount,
+            discount: invoicePayload.discount,
+            status: invoicePayload.status,
+            payments: invoicePayload.payments || []
+          })
+          .eq('id', editingInvoice.id);
+        if (updErr) throw updErr;
+        toast.success('इनवॉइस सफलतापूर्वक अपडेट हो चूका है (Cloud)!');
+        refreshInvoicesData();
+      } else {
+        updateInvoice(editingInvoice.id, invoicePayload);
+        toast.success('इनवॉइस सफलतापूर्वक अपडेट हो चूका है!');
+      }
       setActiveView('LIST');
       setEditingInvoice(undefined);
     } catch (e: any) {
@@ -74,18 +215,33 @@ export default function Invoices() {
   };
 
   // Handle Delete Invoice
-  const handleDelete = (id: string, number: string) => {
+  const handleDelete = async (id: string, number: string) => {
     const isConfirmed = window.confirm(`क्या आप सचमुच इनवॉइस ${number} को डिलीट करना चाहते हैं? ग्राहक का शेष बकाया भी संशोधित हो जाएगा।`);
     if (isConfirmed) {
-      deleteInvoice(id);
-      toast.success(`इनवॉइस ${number} डिलीट कर दिया गया!`);
+      try {
+        if (supabaseMode) {
+          const { error: delErr } = await supabase
+            .from('invoices')
+            .delete()
+            .eq('id', id);
+          if (delErr) throw delErr;
+          toast.success(`इनवॉइस ${number} डिलीट कर दिया गया (Cloud)!`);
+          refreshInvoicesData();
+        } else {
+          deleteInvoice(id);
+          toast.success(`इनवॉइस ${number} डिलीट कर दिया गया!`);
+        }
+      } catch (e: any) {
+        toast.error('इनवॉइस डिलीट करने में गड़बड़ हुई!');
+        console.error(e);
+      }
     }
   };
 
   // Filtering Logic
-  const filteredInvoices = invoices.filter(inv => {
+  const filteredInvoices = dbInvoices.filter(inv => {
     // 1. Search Query Client name or Invoice Number matching
-    const clientName = clients.find(c => c.id === inv.clientId)?.name?.toLowerCase() || '';
+    const clientName = dbClients.find(c => c.id === inv.clientId)?.name?.toLowerCase() || '';
     const invNumber = inv.invoiceNumber?.toLowerCase() || '';
     const matchesSearch = clientName.includes(searchQuery.toLowerCase()) || invNumber.includes(searchQuery.toLowerCase());
 
@@ -368,7 +524,7 @@ export default function Invoices() {
                   </thead>
                   <tbody className="divide-y divide-gray-855/35">
                     {sortedInvoices.map((inv) => {
-                      const clientMatch = clients.find(c => c.id === inv.clientId);
+                      const clientMatch = dbClients.find(c => c.id === inv.clientId);
                       const displayClientName = clientMatch?.name || 'अज्ञात ग्राहक';
                       const balanceRemaining = Math.max(0, inv.totalAmount - inv.paidAmount);
 

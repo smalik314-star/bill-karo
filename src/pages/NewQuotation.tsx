@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useAppStore from '../store';
 import { useAppStore as getStoreRaw } from '../store';
 import { BillItem, Quotation } from '../types';
@@ -21,9 +21,34 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { supabase } from '../lib/supabase';
+
+const mapDbQuoteToUi = (q: any): Quotation => {
+  return {
+    id: q.id,
+    clientId: q.client_id || q.clientId || '',
+    quoteNumber: q.number || q.quoteNumber || '',
+    date: q.created_at ? q.created_at.split('T')[0] : (q.date || new Date().toISOString().split('T')[0]),
+    validityDays: q.validity || q.validityDays || 15,
+    items: typeof q.items === 'string' ? JSON.parse(q.items) : (q.items || []),
+    discount: Number(q.discount || 0),
+    advanceAmount: Number(q.advance || q.advanceAmount || 0),
+    advanceMode: q.advance_mode || q.advanceMode || 'Cash',
+    notes: q.notes || '',
+    isConverted: q.status === 'Converted' || q.isConverted || false,
+    category: q.category || 'Custom',
+    conditions: q.conditions ? (Array.isArray(q.conditions) ? q.conditions : q.conditions.split('\n')) : []
+  };
+};
 
 export default function NewQuotation() {
   const store = useAppStore();
+
+  const [supabaseMode, setSupabaseMode] = useState(false);
+  const [businessId, setBusinessId] = useState<string | null>(null);
+  const [dbQuotes, setDbQuotes] = useState<Quotation[]>([]);
+  const [dbClients, setDbClients] = useState<any[]>([]);
+  const [loadingDb, setLoadingDb] = useState(false);
   
   // UI Screen Modes: 'list' | 'create' | 'edit'
   const [viewMode, setViewMode] = useState<'list' | 'create'>('list');
@@ -36,6 +61,67 @@ export default function NewQuotation() {
   // Preview / Editor focus target
   const [selectedQuote, setSelectedQuote] = useState<Quotation | null>(null);
 
+  const refreshQuotesData = async () => {
+    try {
+      setLoadingDb(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setSupabaseMode(false);
+        setDbQuotes(store.quotations);
+        setDbClients(store.clients);
+        setLoadingDb(false);
+        return;
+      }
+
+      const { data: businesses, error: bErr } = await supabase
+        .from('businesses')
+        .select('id')
+        .eq('user_id', user.id);
+
+      if (bErr || !businesses || businesses.length === 0) {
+        setSupabaseMode(false);
+        setDbQuotes(store.quotations);
+        setDbClients(store.clients);
+        setLoadingDb(false);
+        return;
+      }
+
+      const activeBId = businesses[0].id;
+      setBusinessId(activeBId);
+
+      const [quotesRes, clientsRes] = await Promise.all([
+        supabase.from('quotations').select('*').eq('business_id', activeBId),
+        supabase.from('clients').select('*').eq('business_id', activeBId)
+      ]);
+
+      if (!quotesRes.error) {
+        const mapped = (quotesRes.data || []).map(mapDbQuoteToUi);
+        setSupabaseMode(true);
+        setDbQuotes(mapped);
+      } else {
+        setSupabaseMode(false);
+        setDbQuotes(store.quotations);
+      }
+
+      if (!clientsRes.error) {
+        setDbClients(clientsRes.data || []);
+      } else {
+        setDbClients(store.clients);
+      }
+    } catch (e) {
+      console.error(e);
+      setSupabaseMode(false);
+      setDbQuotes(store.quotations);
+      setDbClients(store.clients);
+    } finally {
+      setLoadingDb(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshQuotesData();
+  }, [store.quotations, store.clients]);
+
   // Core Calculations for Listing Stats
   const calculateQuoteSubtotal = (itemsList: BillItem[]) => {
     return itemsList.reduce((sum, item) => sum + (item.rate * item.quantity), 0);
@@ -47,27 +133,51 @@ export default function NewQuotation() {
   };
 
   // Safe handler to save new Quote
-  const handleSaveQuotation = (quoteData: Omit<Quotation, 'id' | 'isConverted'> & { advanceAmount?: number; advanceMode?: 'Cash' | 'Online'; category?: string; conditions?: string[] }) => {
+  const handleSaveQuotation = async (quoteData: Omit<Quotation, 'id' | 'isConverted'> & { advanceAmount?: number; advanceMode?: 'Cash' | 'Online'; category?: string; conditions?: string[] }) => {
     try {
-      const generatedId = 'q_' + Date.now().toString();
-      store.addQuotation({
-        ...quoteData,
-        isConverted: false
-      });
+      if (supabaseMode && businessId) {
+        const sub = quoteData.items.reduce((sum, item) => sum + (item.rate * item.quantity), 0);
+        const { error: insErr } = await supabase
+          .from('quotations')
+          .insert({
+            business_id: businessId,
+            client_id: quoteData.clientId,
+            number: quoteData.quoteNumber,
+            items: quoteData.items,
+            subtotal: sub,
+            discount: quoteData.discount,
+            grand_total: Math.max(0, sub - (quoteData.discount || 0)),
+            advance: quoteData.advanceAmount || 0,
+            advance_mode: quoteData.advanceMode || 'Cash',
+            validity: quoteData.validityDays || 15,
+            notes: quoteData.notes || '',
+            category: quoteData.category || 'Custom',
+            conditions: quoteData.conditions ? quoteData.conditions.join('\n') : '',
+            status: 'Pending'
+          });
+        if (insErr) throw insErr;
+        toast.success('नया कोटेशन/एस्टीमेट सफलतापूर्वक क्लाउड पर सहेजा गया!');
+        refreshQuotesData();
+      } else {
+        store.addQuotation({
+          ...quoteData,
+          isConverted: false
+        });
+        toast.success('नया कोटेशन/एस्टीमेट सफलतापूर्वक सहेजा गया!');
+      }
 
       // Clear states and load preview of newly saved quote immediately!
       setViewMode('list');
       
       // Attempt to load the newly added quote to open preview directly for rich feedback
       setTimeout(() => {
-        const latestQuotes = getStoreRaw.getState().quotations;
+        const latestQuotes = supabaseMode ? dbQuotes : getStoreRaw.getState().quotations;
         const matchingNew = latestQuotes[latestQuotes.length - 1];
         if (matchingNew) {
           setSelectedQuote(matchingNew);
         }
-      }, 100);
+      }, 150);
 
-      toast.success('नया कोटेशन/एस्टीमेट सफलतापूर्वक सहेजा गया!');
     } catch (err: any) {
       toast.error('कोटेशन सहेजने में त्रुटि आई!');
       console.error(err);
@@ -75,17 +185,52 @@ export default function NewQuotation() {
   };
 
   // Convert Quote To Invoice handler
-  const handleConvertQuoteToInvoice = (quoteId: string) => {
+  const handleConvertQuoteToInvoice = async (quoteId: string) => {
     try {
-      store.convertQuoteToInvoice(quoteId);
-      toast.success('बधाई हो! कच्चा बिल (Estimate) पक्के बिल (Invoice) में बदला गया और ग्राहक बही अपडेट हुई।');
+      if (supabaseMode) {
+        const { error: updErr } = await supabase
+          .from('quotations')
+          .update({
+            status: 'Converted'
+          })
+          .eq('id', quoteId);
+        if (updErr) throw updErr;
+
+        // Fetch quote data to generate corresponding invoice
+        const matchedQuote = dbQuotes.find(q => q.id === quoteId);
+        if (matchedQuote && businessId) {
+          const invNumber = `INV-${matchedQuote.quoteNumber.replace(/^(EST|ESTIMATE|QT|Q)-/gi, '') || Math.floor(1000 + Math.random() * 9000)}`;
+          const sub = matchedQuote.items.reduce((s, i) => s + (i.rate * i.quantity), 0);
+          
+          await supabase
+            .from('invoices')
+            .insert({
+              business_id: businessId,
+              client_id: matchedQuote.clientId,
+              quotation_id: matchedQuote.id,
+              number: invNumber,
+              items: matchedQuote.items,
+              subtotal: sub,
+              discount: matchedQuote.discount,
+              grand_total: Math.max(0, sub - (matchedQuote.discount || 0)),
+              status: 'Unpaid'
+            });
+        }
+        toast.success('एस्टीमेट (Estimate) पक्के बिल (Invoice) में बदला गया!');
+        refreshQuotesData();
+      } else {
+        store.convertQuoteToInvoice(quoteId);
+        toast.success('बधाई हो! कच्चा बिल (Estimate) पक्के बिल (Invoice) में बदला गया और ग्राहक बही अपडेट हुई।');
+      }
       
       // Update selectedQuote state to force converted stamp in open preview
-      const updatedQuotes = getStoreRaw.getState().quotations;
-      const refreshedTarget = updatedQuotes.find(q => q.id === quoteId);
-      if (refreshedTarget) {
-        setSelectedQuote(refreshedTarget);
-      }
+      setTimeout(() => {
+        const updatedQuotes = supabaseMode ? dbQuotes : getStoreRaw.getState().quotations;
+        const refreshedTarget = updatedQuotes.find(q => q.id === quoteId);
+        if (refreshedTarget) {
+          setSelectedQuote(refreshedTarget);
+        }
+      }, 150);
     } catch (err: any) {
       toast.error('कच्चे बिल से पक्का बिल बनाने में त्रुटि आई!');
       console.error(err);
@@ -93,8 +238,8 @@ export default function NewQuotation() {
   };
 
   // Filter existing quotations
-  const filteredQuotations = store.quotations.filter(quote => {
-    const matchedClient = store.clients.find(c => c.id === quote.clientId);
+  const filteredQuotations = dbQuotes.filter(quote => {
+    const matchedClient = dbClients.find(c => c.id === quote.clientId);
     const clientNameStr = (matchedClient?.name || '').toLowerCase();
     const numberStr = (quote.quoteNumber || '').toLowerCase();
     
@@ -113,13 +258,13 @@ export default function NewQuotation() {
   });
 
   // Calculate high value insights
-  const totalEstimationsCount = store.quotations.length;
-  const pendingCount = store.quotations.filter(q => !q.isConverted).length;
-  const totalValuePendingSum = store.quotations
+  const totalEstimationsCount = dbQuotes.length;
+  const pendingCount = dbQuotes.filter(q => !q.isConverted).length;
+  const totalValuePendingSum = dbQuotes
     .filter(q => !q.isConverted)
     .reduce((sum, q) => sum + getQuoteTotalValue(q), 0);
 
-  const convertedValueSum = store.quotations
+  const convertedValueSum = dbQuotes
     .filter(q => q.isConverted)
     .reduce((sum, q) => sum + getQuoteTotalValue(q), 0);
 
