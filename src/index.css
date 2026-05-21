@@ -351,3 +351,126 @@ th {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Print and PDF rendering styles to ensure pristine A4 format layout */
+@media print {
+  /* Hide all interactive screen elements like sidebars, headers, mobile navigations, action panels etc */
+  header,
+  aside,
+  nav,
+  button,
+  .no-print,
+  [class*="pb-safe"],
+  /* Selectively target action banners in modals */
+  div[class*="bg-[#0D121F]"],
+  div[class*="backdrop-blur-md"] > div > div:first-child,
+  header + md\:hidden {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Reset document flow and background for paper printouts */
+  html, body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    width: 210mm !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Specific A4 sizing guidelines */
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 15mm 15mm;
+  }
+
+  /* Make sure modal overlays behave as static blocks to span multiple pages continuously if needed */
+  div[class*="fixed inset-0"],
+  div[class*="fixed inset-0"] > div,
+  /* Handle scrollable inner packaging */
+  div[class*="overflow-y-auto"] {
+    position: static !important;
+    display: block !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Standardize printable invoice, estimate, and receipt cards to cover A4 boundaries */
+  #printable-tax-invoice-card,
+  #printable-estimate-card,
+  #payment-receipt-slip-paper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  /* Ensure colors and backgrounds of items maintain high readability */
+  #printable-tax-invoice-card *,
+  #printable-estimate-card *,
+  #payment-receipt-slip-paper * {
+    color: #1f2937 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Table rules for page-breaks */
+  thead {
+    display: table-header-group !important;
+  }
+
+  tr, td, th {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Styling details high print contrast */
+  th {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    border-bottom: 2px solid #9ca3af !important;
+  }
+
+  td {
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+}
+
+/* Ensure pdf generation is perfectly formatted to standard desk workspace dimensions */
+.pdf-rendering {
+  width: 794px !important; /* Matches standard A4 width beautifully */
+  max-width: 794px !important;
+  min-width: 794px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 30px !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.pdf-rendering * {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
