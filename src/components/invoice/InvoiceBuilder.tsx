@@ -42,11 +42,11 @@ export default function InvoiceBuilder({ onSave, onCancel, initialData, preselec
     const prefix = 'INV-2026-';
     const targetInvoices = invoices.filter(inv => inv.invoiceNumber && inv.invoiceNumber.startsWith(prefix));
     if (targetInvoices.length === 0) {
-      return `${prefix}003`; // INV-2026-001 and 002 are INITIAL_INVOICES seeds
+      return `${prefix}001`; 
     }
     
     // Find the highest sequence number
-    let maxSeq = 2;
+    let maxSeq = 0;
     targetInvoices.forEach(inv => {
       const parts = inv.invoiceNumber.split('-');
       const seqStr = parts[parts.length - 1];

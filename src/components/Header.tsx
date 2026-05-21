@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useAppStore from '../store';
 import useTranslation from '../hooks/useTranslation';
 import { useLanguage } from '../context/LanguageContext';
-import { ShieldCheck, Award, Zap, Building, Clock, Globe, ChevronDown } from 'lucide-react';
+import { ShieldCheck, Award, Zap, Building, Clock, Globe, ChevronDown, LogOut } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import toast from 'react-hot-toast';
 
 export default function Header() {
   const { profile, subscription, setSubscription } = useAppStore();
@@ -10,6 +13,7 @@ export default function Header() {
   const { language, setLanguage } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -33,6 +37,17 @@ export default function Header() {
         return 'HNG';
       default:
         return 'EN';
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast.success('लॉगआउट सफल रहा!');
+      navigate('/signin');
+    } catch (err: any) {
+      toast.error('लॉगआउट में त्रुटि हुई!');
     }
   };
 
@@ -157,6 +172,16 @@ export default function Header() {
               </div>
             )}
           </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-1.5 bg-gray-900 hover:bg-red-500/10 text-red-400 hover:text-red-300 px-3 py-1.5 rounded-full border border-gray-800 hover:border-red-500/30 text-xs font-bold transition-all duration-150 focus:outline-none cursor-pointer"
+            title="Log Out"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            <span className="text-[10px] uppercase tracking-wider hidden sm:inline">{t('लॉगआउट')}</span>
+          </button>
         </div>
       </div>
 
