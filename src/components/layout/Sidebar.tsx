@@ -83,7 +83,7 @@ export default function Sidebar() {
 
         <button 
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 hover:bg-gray-800 rounded-lg text-gray-400 hover:text-white transition cursor-pointer"
+          className="p-1.5 hover:bg-gray-850 rounded-lg text-gray-200 hover:text-amber-400 transition cursor-pointer"
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
@@ -98,14 +98,14 @@ export default function Sidebar() {
           {!collapsed && (
             <div className="flex-1 min-w-0">
               <h4 className="text-xs font-black text-gray-100 truncate">{profile.ownerName || 'Ledger Owner'}</h4>
-              <p className="text-[10px] text-gray-400 truncate">{profile.businessName || 'Business Name'}</p>
+              <p className="text-[10px] text-gray-300 truncate">{profile.businessName || 'Business Name'}</p>
               
               {/* Badge */}
               <div className="flex items-center mt-1">
                 <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold ${
                   subscription === 'PRO' || subscription === 'YEARLY' 
-                    ? 'bg-amber-400/10 border border-amber-500/20 text-amber-500' 
-                    : 'bg-gray-800 text-gray-400'
+                    ? 'bg-amber-400/25 border border-amber-500/40 text-amber-400' 
+                    : 'bg-gray-800 text-gray-200 border border-gray-700'
                 }`}>
                   {subscription === 'PRO' || subscription === 'YEARLY' ? '⭐ PRO MEMBER' : 'FREE ACCOUNT'}
                 </span>
@@ -125,11 +125,11 @@ export default function Sidebar() {
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center space-x-3 p-2.5 rounded-xl transition-all cursor-pointer ${
                 isActive 
-                  ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20 font-extrabold' 
-                  : 'text-gray-400 hover:bg-gray-800/50 hover:text-white border border-transparent'
+                  ? 'bg-amber-500 text-[#090D16] border border-amber-400 font-extrabold shadow-md shadow-amber-500/10' 
+                  : 'text-gray-200 hover:bg-gray-800 hover:text-amber-400 border border-transparent'
               }`}
             >
-              <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-amber-500' : 'text-gray-500'}`} />
+              <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-[#090D16]' : 'text-gray-300'}`} />
               {!collapsed && (
                 <span className="text-xs font-black truncate">{t(item.label)}</span>
               )}
@@ -142,9 +142,9 @@ export default function Sidebar() {
       <div className="p-4 border-t border-gray-800">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center space-x-3 p-2 hover:bg-red-500/10 hover:text-red-400 rounded-xl transition text-gray-400 cursor-pointer text-left"
+          className="w-full flex items-center space-x-3 p-2 hover:bg-red-500/15 hover:text-red-400 rounded-xl transition text-gray-200 cursor-pointer text-left"
         >
-          <LogOut className="h-4.5 w-4.5 text-red-500/70" />
+          <LogOut className="h-4.5 w-4.5 text-red-500" />
           {!collapsed && (
             <span className="text-xs font-black">{t('लॉगआउट (Log Out)')}</span>
           )}
