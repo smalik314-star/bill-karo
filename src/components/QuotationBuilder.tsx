@@ -25,7 +25,7 @@ export default function QuotationBuilder() {
   // Form states
   const [selectedClientId, setSelectedClientId] = useState('');
   const [discount, setDiscount] = useState('0');
-  const [notes, setNotes] = useState('Dukan rate valid for 15 days.');
+  const [notes, setNotes] = useState('');
   const [validity, setValidity] = useState('15');
 
   // Multi-item builder states
@@ -94,7 +94,7 @@ export default function QuotationBuilder() {
     setSelectedClientId('');
     setItems([]);
     setDiscount('0');
-    setNotes('Dukan rate valid for 15 days.');
+    setNotes('');
     setValidity('15');
     setShowAddForm(false);
     alert("Quotation / Estimate safely save ho gaya!");
@@ -157,7 +157,7 @@ export default function QuotationBuilder() {
               <div>
                 <input 
                   type="text" 
-                  placeholder="सामग्री का नाम (e.g., 20mm Iron Saria Welding)"
+                  placeholder="सामग्री का नाम"
                   value={currItemName}
                   onChange={e => setCurrItemName(e.target.value)}
                   className="w-full bg-gray-900 border border-gray-800 rounded p-2 text-xs text-white focus:outline-none focus:border-amber-500 placeholder-gray-500"

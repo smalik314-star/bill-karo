@@ -36,7 +36,7 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
   const [date, setDate] = useState(initialData?.date || new Date().toISOString().split('T')[0]);
   const [validityDays, setValidityDays] = useState(initialData?.validityDays?.toString() || '15');
   const [discount, setDiscount] = useState(initialData?.discount?.toString() || '0');
-  const [notes, setNotes] = useState(initialData?.notes || 'Dukan rate valid for 15 days.');
+  const [notes, setNotes] = useState(initialData?.notes || '');
 
   // Items table (description + amount)
   const [items, setItems] = useState<BillItem[]>(initialData?.items || []);
@@ -48,13 +48,8 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
   const [advanceMode, setAdvanceMode] = useState<'Cash' | 'Online'>(initialData?.advanceMode || 'Cash');
 
   // Terms & Conditions (editable list)
-  const defaultConditions = [
-    'Extra kaam = extra charge hoga (अतिरिक्त कार्य का अतिरिक्त चार्ज होगा)',
-    'Labour cost alag se lagega (मजदूरी / लेबर का खर्च अलग से जोड़ा जाएगा)',
-    'Saaman transport customer ki zimmedari (सामान लाने व ले जाने का ट्रांसपोर्ट ग्राहक की जिम्मेदारी होगी)'
-  ];
   const [conditions, setConditions] = useState<string[]>(
-    initialData?.conditions || defaultConditions
+    initialData?.conditions || []
   );
   const [newCondition, setNewCondition] = useState('');
 
@@ -264,10 +259,10 @@ export default function QuotationBuilder({ onSave, onCancel, initialData }: Quot
             <div className="sm:col-span-4">
               <input 
                 type="text"
-                placeholder="काम/सामग्री का विवरण (e.g., 2 Inch Copper Wiring & Fitting Charges)"
+                placeholder="काम/सामग्री का विवरण"
                 value={itemName}
                 onChange={e => setItemName(e.target.value)}
-                className="w-full bg-gray-950 border border-gray-850 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 placeholder-gray-600"
+                className="w-full bg-gray-950 border border-gray-855 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-550 placeholder-gray-600"
               />
             </div>
             <div className="sm:col-span-1.5 relative">

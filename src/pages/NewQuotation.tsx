@@ -273,7 +273,7 @@ export default function NewQuotation() {
           {filteredQuotations.length === 0 ? (
             <div className="bg-gray-900/40 border border-dashed border-gray-800 rounded-3xl p-16 text-center text-gray-500 space-y-3">
               <Briefcase className="h-10 w-10 text-gray-600 mx-auto" />
-              <h4 className="text-xs font-bold text-gray-300">कोई कोटेशन/अनुमान प्रपत्र नहीं मिला (No Estimates Found)</h4>
+              <h4 className="text-xs font-bold text-gray-300">कोई एस्टीमेट नहीं मिला</h4>
               <p className="text-[10px] text-gray-550 max-w-md mx-auto">
                 सर्च फ़िल्टर बदलें या नया एस्टीमेट जारी करने के लिए ऊपर "+ नया एस्टीमेट बनाएँ" पर क्लिक करें।
               </p>
