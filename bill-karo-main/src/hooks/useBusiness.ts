@@ -1,36 +1,21 @@
-import { useMemo } from 'react';
-import useAppStore from '../store';
-import { BusinessProfile } from '../types';
+import { useContext } from 'react';
+import { LanguageContext } from '../context/LanguageContext';
 
-export interface BusinessInfo {
-  profile: BusinessProfile;
-  hasGst: boolean;
-  isRegisteredGST: boolean;
-  formattedName: string;
-  updateBusiness: (updates: Partial<BusinessProfile>) => void;
-  language: 'Hinglish' | 'Hindi' | 'English';
-}
-
-export const useBusiness = (): BusinessInfo => {
-  const { profile, updateProfile } = useAppStore();
-
-  const businessInfo = useMemo(() => {
-    const hasGst = !!(profile.gstNumber && profile.gstNumber.trim().length > 0);
-    const isRegisteredGST = !!profile.isRegisteredGST;
-    const formattedName = profile.businessName || 'My Business';
-    const language = profile.language || 'Hinglish';
-
+export const useTranslation = () => {
+  const context = useContext(LanguageContext);
+  if (context) {
     return {
-      profile,
-      hasGst,
-      isRegisteredGST,
-      formattedName,
-      updateBusiness: updateProfile,
-      language
+      language: context.language,
+      t: context.t
     };
-  }, [profile, updateProfile]);
-
-  return businessInfo;
+  }
+  const stored = localStorage.getItem('billkaro_language') || 'English';
+  return {
+    language: stored as 'Hindi' | 'English' | 'Hinglish',
+    t: (key: string) => key
+  };
 };
 
-export default useBusiness;
+export const useGlobalDOMTranslator = () => {};
+
+export default useTranslation;
