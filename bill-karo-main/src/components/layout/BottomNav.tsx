@@ -57,7 +57,7 @@ export default function BottomNav({ onMoreClick }: BottomNavProps) {
           onClick={onMoreClick}
           className="flex flex-col items-center justify-center text-gray-400 hover:text-white cursor-pointer"
         >
-          <Menu className="h-5 w-5 mb-1 text-amber-500" />
+          <Menu className="h-5 w-5 mb-1" />
           <span className="text-[9.5px] font-black leading-tight block">
             अधिक (More)
           </span>

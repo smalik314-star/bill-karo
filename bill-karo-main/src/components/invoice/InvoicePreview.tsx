@@ -80,20 +80,59 @@ export default function InvoicePreview({ invoice, onClose }: InvoicePreviewProps
     }
 
     const loader = toast.loading('जीएसटी इनवॉइस पीडीएफ तैयार किया जा रहा है...');
+    
+    // Create an isolated container outside the main app so global CSS !important rules don't interfere
+    const isolatedContainer = document.createElement('div');
+    isolatedContainer.style.cssText = [
+      'position:fixed',
+      'top:-99999px',
+      'left:-99999px',
+      'width:794px',
+      'background:#ffffff',
+      'color:#1f2937',
+      'font-family:Outfit,sans-serif',
+      'z-index:-1',
+      'padding:30px',
+      'box-sizing:border-box'
+    ].join(';');
+    
+    const clonedElement = element.cloneNode(true) as HTMLElement;
+    
+    // Strip all inline styles that may conflict, then force clean PDF styles
+    const allNodes = clonedElement.querySelectorAll('*');
+    allNodes.forEach((node) => {
+      const el = node as HTMLElement;
+      // Remove any style overrides that would conflict
+      el.style.removeProperty('background-color');
+      el.style.removeProperty('color');
+    });
+    
+    // Force clean white background on root clone
+    clonedElement.style.cssText = [
+      'width:100%',
+      'background:#ffffff !important',
+      'color:#1f2937 !important',
+      'font-size:14px',
+      'line-height:1.5'
+    ].join(';');
+
+    isolatedContainer.appendChild(clonedElement);
+    document.body.appendChild(isolatedContainer);
+
     try {
-      element.classList.add('pdf-rendering');
+      // Wait for clone to render
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Wait briefly for style recalculation and browser repaint
-      await new Promise((resolve) => setTimeout(resolve, 150));
-
-      const canvas = await html2canvas(element, {
-        scale: 2.2, // fine resolution sharp printout
+      const canvas = await html2canvas(isolatedContainer, {
+        scale: 2.2,
         useCORS: true,
         backgroundColor: '#FFFFFF',
-        logging: false
+        logging: false,
+        allowTaint: true,
+        foreignObjectRendering: false
       });
 
-      element.classList.remove('pdf-rendering');
+      document.body.removeChild(isolatedContainer);
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -120,6 +159,10 @@ export default function InvoicePreview({ invoice, onClose }: InvoicePreviewProps
       toast.dismiss(loader);
       toast.success('पक्का इनवॉइस पीडीएफ सफलतापूर्वक सहेजा गया!');
     } catch (err: any) {
+      // Cleanup on error
+      if (document.body.contains(isolatedContainer)) {
+        document.body.removeChild(isolatedContainer);
+      }
       toast.dismiss(loader);
       console.error(err);
       toast.error('पीडीएफ रेंडर करने में समस्या आई!');

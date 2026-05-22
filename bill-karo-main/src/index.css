@@ -474,3 +474,82 @@ th {
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
+
+/* ===== MOBILE OVERFLOW FIX ===== */
+@media (max-width: 640px) {
+  /* Header ke subscription buttons mobile pe chhote rehne chahiye */
+  header .text-\[9px\],
+  header .text-\[10px\],
+  header span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Bottom nav labels ko overflow mat karne do */
+  div[class*="pb-safe"] button span {
+    font-size: 9px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 56px;
+    display: block;
+  }
+
+  /* Header actions area overflow prevent */
+  header > div {
+    overflow: hidden;
+  }
+
+  /* Small text on mobile should not be bumped up too much */
+  .text-\[9px\], .text-\[9\.5px\] {
+    font-size: 9px !important;
+  }
+  .text-\[10px\], .text-\[10\.5px\] {
+    font-size: 10px !important;
+  }
+  .text-\[11px\], .text-\[11\.5px\] {
+    font-size: 11px !important;
+  }
+}
+/* ===== END MOBILE OVERFLOW FIX ===== */
+
+/* Globe (language) icon - header mein blue dikhna chahiye */
+header svg.lucide-globe {
+  color: #1e40af !important;
+}
+
+/* LogOut icon - red color preserve karo */
+header button[title="Log Out"] svg {
+  color: #f87171 !important;
+}
+header button[title="Log Out"]:hover svg {
+  color: #fca5a5 !important;
+}
+
+/* Login page - Chrome (Google) icon blue rehna chahiye */
+svg.lucide-chrome {
+  color: #3b82f6 !important;
+}
+
+/* Login page - ShieldCheck icon amber color */
+svg.lucide-shield-check {
+  color: #f59e0b !important;
+}
+
+/* Bottom nav - active button white text aur icon */
+div[class*="pb-safe"] button.text-amber-500,
+div[class*="pb-safe"] button.text-amber-500 svg,
+div[class*="pb-safe"] button.text-amber-500 span {
+  color: #ffffff !important;
+}
+
+/* Bottom nav inactive icons */
+div[class*="pb-safe"] button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+div[class*="pb-safe"] button svg {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* ===== END ICON COLOR FIXES ===== */

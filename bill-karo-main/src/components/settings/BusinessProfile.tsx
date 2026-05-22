@@ -3,11 +3,13 @@ import useAppStore from '../../store';
 import { supabase } from '../../lib/supabase';
 import { Save, Image, Smartphone, QrCode, Building, CheckCircle, Languages, AlertCircle, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../../context/LanguageContext';
 
 
 export default function BusinessProfile() {
 
   const { updateProfile } = useAppStore();
+  const { setLanguage } = useLanguage();
 
   const [form, setForm] = useState<{
     businessName: string;
@@ -326,7 +328,8 @@ export default function BusinessProfile() {
                       onClick={() => {
                         const nextLang = langOption as any;
                         setForm(prev => ({ ...prev, language: nextLang }));
-                        // Instantly save preference to global state & local storage for instant reactivity!
+                        // Instantly update LanguageContext so entire app switches immediately
+                        setLanguage(nextLang);
                         updateProfile({ ...form, language: nextLang });
                         localStorage.setItem('billkaro_language', nextLang);
                         toast.success(

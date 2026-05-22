@@ -173,19 +173,49 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
     if (!element) return;
 
     const loader = toast.loading('रसीद डाउनलोड की जा रही है...');
+
+    const isolatedContainer = document.createElement('div');
+    isolatedContainer.style.cssText = [
+      'position:fixed',
+      'top:-99999px',
+      'left:-99999px',
+      'width:560px',
+      'background:#ffffff',
+      'color:#1f2937',
+      'font-family:Outfit,sans-serif',
+      'z-index:-1',
+      'padding:20px',
+      'box-sizing:border-box'
+    ].join(';');
+
+    const clonedElement = element.cloneNode(true) as HTMLElement;
+    const allNodes = clonedElement.querySelectorAll('*');
+    allNodes.forEach((node) => {
+      const el = node as HTMLElement;
+      el.style.removeProperty('background-color');
+      el.style.removeProperty('color');
+    });
+    clonedElement.style.cssText = 'width:100%;background:#ffffff;color:#1f2937;font-size:14px;line-height:1.5';
+
+    isolatedContainer.appendChild(clonedElement);
+    document.body.appendChild(isolatedContainer);
+
     try {
-      element.classList.add('pdf-rendering');
-      const canvas = await html2canvas(element, {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      const canvas = await html2canvas(isolatedContainer, {
         scale: 2,
         backgroundColor: '#FFFFFF',
-        logging: false
+        logging: false,
+        allowTaint: true,
+        foreignObjectRendering: false
       });
-      element.classList.remove('pdf-rendering');
+
+      document.body.removeChild(isolatedContainer);
 
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a5'); // elegant A5 mini sheet size
+      const pdf = new jsPDF('p', 'mm', 'a5');
       const pdfWidth = 148;
-      const pdfHeight = 210;
       
       const imgWidth = pdfWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -196,6 +226,9 @@ export default function PaymentEntry({ invoice, onClose }: PaymentEntryProps) {
       toast.dismiss(loader);
       toast.success('पेमेंट रसीद डाउनलोड हो गई!');
     } catch (e: any) {
+      if (document.body.contains(isolatedContainer)) {
+        document.body.removeChild(isolatedContainer);
+      }
       toast.dismiss(loader);
       console.error(e);
       toast.error('पीडीएफ डाउनलोड करने में समस्या आई!');

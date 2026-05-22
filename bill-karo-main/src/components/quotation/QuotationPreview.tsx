@@ -57,23 +57,51 @@ export default function QuotationPreview({ quotation, onConvert, onClose }: Quot
     }
 
     const loader = toast.loading('पीडीएफ रसीद तैयार की जा रही है...');
-    try {
-      // Temporarily add a white background class for clean pixel values
-      element.classList.add('pdf-rendering');
 
-      const canvas = await html2canvas(element, {
-        scale: 2.2, // sharp resolution boost
+    const isolatedContainer = document.createElement('div');
+    isolatedContainer.style.cssText = [
+      'position:fixed',
+      'top:-99999px',
+      'left:-99999px',
+      'width:794px',
+      'background:#ffffff',
+      'color:#1f2937',
+      'font-family:Outfit,sans-serif',
+      'z-index:-1',
+      'padding:30px',
+      'box-sizing:border-box'
+    ].join(';');
+
+    const clonedElement = element.cloneNode(true) as HTMLElement;
+    const allNodes = clonedElement.querySelectorAll('*');
+    allNodes.forEach((node) => {
+      const el = node as HTMLElement;
+      el.style.removeProperty('background-color');
+      el.style.removeProperty('color');
+    });
+    clonedElement.style.cssText = 'width:100%;background:#ffffff;color:#1f2937;font-size:14px;line-height:1.5';
+
+    isolatedContainer.appendChild(clonedElement);
+    document.body.appendChild(isolatedContainer);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      const canvas = await html2canvas(isolatedContainer, {
+        scale: 2.2,
         useCORS: true,
-        backgroundColor: '#FFFFFF', // pure clean sheet background
-        logging: false
+        backgroundColor: '#FFFFFF',
+        logging: false,
+        allowTaint: true,
+        foreignObjectRendering: false
       });
 
-      element.classList.remove('pdf-rendering');
+      document.body.removeChild(isolatedContainer);
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = 210; // A4 Standard width
-      const pdfHeight = 297; // A4 Standard height
+      const pdfWidth = 210;
+      const pdfHeight = 297;
       
       const imgWidth = pdfWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -95,6 +123,9 @@ export default function QuotationPreview({ quotation, onConvert, onClose }: Quot
       toast.dismiss(loader);
       toast.success('एस्टीमेट पीडीएफ सफलतापूर्वक डाउनलोड किया गया!');
     } catch (err: any) {
+      if (document.body.contains(isolatedContainer)) {
+        document.body.removeChild(isolatedContainer);
+      }
       toast.dismiss(loader);
       console.error(err);
       toast.error('पीडीएफ रसीद डाउनलोड करने में त्रुटि आई!');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import Clients from './pages/Clients';
@@ -23,6 +23,7 @@ import { useGlobalDOMTranslator } from './hooks/useTranslation';
 
 function MainAppContent() {
   const navigate = useNavigate();
+  const location = useLocation();
   useGlobalDOMTranslator();
   
   return (
@@ -35,7 +36,7 @@ function MainAppContent() {
         <PWAInstallPrompt />
 
         {/* Global Header (Only displayed if not on auth pages) */}
-        {window.location.pathname !== '/signin' && window.location.pathname !== '/signup' && (
+        {location.pathname !== '/signin' && location.pathname !== '/signup' && (
           <Header />
         )}
 
