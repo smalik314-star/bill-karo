@@ -83,7 +83,7 @@ const DEFAULT_PROFILE: BusinessProfile = {
   ifscCode: '',
   upiId: '',
   signatureText: '',
-  language: (localStorage.getItem('billkaro_language') as any) || 'Hinglish'
+  language: (localStorage.getItem('billkaro_language') as any) || 'English'
 };
 
 const INITIAL_CLIENTS: Client[] = [];
@@ -127,7 +127,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   profile: (() => {
     const prof = getStoredState('profile', DEFAULT_PROFILE);
     if (!prof.language) {
-      prof.language = (localStorage.getItem('billkaro_language') as any) || 'Hinglish';
+      prof.language = (localStorage.getItem('billkaro_language') as any) || 'English';
     }
     return prof;
   })(),

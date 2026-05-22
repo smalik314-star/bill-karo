@@ -53,31 +53,31 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-[#0B0F1A] border-b border-gray-800 sticky top-0 z-50 px-4 py-3 shadow-md">
+    <header className="bg-[#0B0F1A] border-b border-gray-800 sticky top-0 z-50 px-3 sm:px-4 py-2.5 sm:py-3 shadow-md">
       <div className="flex items-center justify-between">
         {/* Brand & Active Dhandha */}
-        <div className="flex items-center space-x-2.5">
-          <div className="h-9 w-9 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-black shadow-lg shadow-amber-500/20 text-lg">
+        <div className="flex items-center space-x-1.5 sm:space-x-2.5 min-w-0">
+          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-black shadow-lg shadow-amber-500/20 text-base sm:text-lg shrink-0">
             BK
           </div>
-          <div>
-            <h1 className="text-[#F59E0B] font-extrabold text-base tracking-tight leading-none">
+          <div className="min-w-0">
+            <h1 className="text-[#F59E0B] font-extrabold text-xs sm:text-base tracking-tight leading-none">
               BillKaro
             </h1>
-            <span className="text-[10px] text-gray-400 font-mono font-medium flex items-center mt-0.5">
-              <Building className="h-2.5 w-2.5 mr-1 text-amber-500/80" />
-              {profile.businessName || 'Mera Karobar'}
+            <span className="text-[9px] sm:text-[10px] text-gray-400 font-mono font-medium flex items-center mt-0.5 max-w-[65px] sm:max-w-[150px] md:max-w-none truncate">
+              <Building className="h-2.5 w-2.5 mr-1 text-amber-500/80 shrink-0" />
+              <span className="truncate">{profile.businessName || 'Mera Karobar'}</span>
             </span>
           </div>
         </div>
 
         {/* Actions & Controllers */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 sm:space-x-2 min-w-0 shrink-0">
           {/* Subscription Tier Controller */}
-          <div className="flex items-center space-x-1 bg-gray-900 p-1 rounded-full border border-gray-800">
+          <div className="flex items-center space-x-0.5 sm:space-x-1 bg-gray-900 p-0.5 sm:p-1 rounded-full border border-gray-800">
             <button
               onClick={() => setSubscription('FREE')}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all ${
+              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold transition-all ${
                 subscription === 'FREE'
                   ? 'bg-gray-600 text-white'
                   : 'text-gray-400 hover:text-white'
@@ -87,25 +87,26 @@ export default function Header() {
             </button>
             <button
               onClick={() => setSubscription('PRO')}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
+              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
                 subscription === 'PRO'
                   ? 'bg-amber-500 text-[#0B0F1A]'
                   : 'text-amber-500/80 hover:text-amber-400'
               }`}
             >
-              <Zap className="h-2.5 w-2.5 fill-current" />
+              <Zap className="h-2 w-2 sm:h-2.5 sm:w-2.5 fill-current" />
               <span>PRO</span>
             </button>
             <button
               onClick={() => setSubscription('YEARLY')}
-              className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
+              className={`px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-bold transition-all flex items-center space-x-0.5 ${
                 subscription === 'YEARLY'
                   ? 'bg-emerald-500 text-[#0B0F1A]'
                   : 'text-emerald-400 hover:text-emerald-300'
               }`}
             >
-              <ShieldCheck className="h-2.5 w-2.5" />
-              <span>{t('साल (₹1499)')}</span>
+              <ShieldCheck className="h-2 w-2 sm:h-2.5 sm:w-2.5" />
+              <span className="hidden sm:inline">{t('साल (₹1499)')}</span>
+              <span className="inline sm:hidden">{t('Year')}</span>
             </button>
           </div>
 
@@ -113,12 +114,12 @@ export default function Header() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center space-x-1.5 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white px-3 py-1.5 rounded-full border border-gray-800 text-xs font-bold transition-all duration-150 focus:outline-none"
+              className="flex items-center space-x-1 sm:space-x-1.5 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-800 text-[10px] sm:text-xs font-bold transition-all duration-150 focus:outline-none"
               title="Change Language"
             >
-              <Globe className="h-3.5 w-3.5 text-amber-500" />
-              <span className="text-[10px] uppercase tracking-wider">{getLanguageLabel(language)}</span>
-              <ChevronDown className={`h-3 w-3 text-gray-400 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+              <Globe className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-amber-500" />
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-wider">{getLanguageLabel(language)}</span>
+              <ChevronDown className={`h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-400 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {langOpen && (
@@ -177,7 +178,7 @@ export default function Header() {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-1.5 bg-gray-900 hover:bg-red-500/10 text-red-400 hover:text-red-300 px-3 py-1.5 rounded-full border border-gray-800 hover:border-red-500/30 text-xs font-bold transition-all duration-150 focus:outline-none cursor-pointer"
+            className="flex items-center space-x-1 sm:space-x-1.5 bg-gray-900 hover:bg-red-500/10 text-red-400 hover:text-red-300 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-800 hover:border-red-500/30 text-[10px] sm:text-xs font-bold transition-all duration-150 focus:outline-none cursor-pointer"
             title="Log Out"
           >
             <LogOut className="h-3.5 w-3.5" />
@@ -190,12 +191,12 @@ export default function Header() {
       {subscription === 'FREE' && (
         <div className="mt-2 text-center bg-amber-500/10 border border-amber-500/20 rounded py-1 px-2 flex items-center justify-between">
           <span className="text-[10px] text-amber-500 flex items-center font-medium">
-            <Award className="h-3 w-3 mr-1 animate-pulse" />
-            {t('Free Trial active. Cards may have watermark. Limit: 5 Client maximum.')}
+            <Award className="h-3 w-3 mr-1 animate-pulse animate-duration-1000 shrink-0" />
+            <span className="truncate ml-1">{t('Free Trial active. Cards may have watermark. Limit: 5 Client maximum.')}</span>
           </span>
           <button 
             onClick={() => setSubscription('PRO')}
-            className="text-[9px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold hover:bg-amber-400"
+            className="text-[9px] bg-amber-500 text-black px-1.5 py-0.5 rounded font-bold hover:bg-amber-400 shrink-0 ml-2"
           >
             {t('Upgrade Now')}
           </button>

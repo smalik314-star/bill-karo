@@ -474,7 +474,7 @@ export const useTranslation = () => {
 
   const profile = useAppStore((state) => state.profile);
   const storedLang = localStorage.getItem('billkaro_language');
-  const language = (storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English';
+  const language = (storedLang || profile.language || 'English') as 'Hinglish' | 'Hindi' | 'English';
 
   const t = (text: string): string => translateText(text, language);
 
@@ -491,7 +491,7 @@ export const useGlobalDOMTranslator = () => {
   const context = useContext(LanguageContext);
   const profile = useAppStore((state) => state.profile);
   const storedLang = localStorage.getItem('billkaro_language');
-  const language = context ? context.language : ((storedLang || profile.language || 'Hinglish') as 'Hinglish' | 'Hindi' | 'English');
+  const language = context ? context.language : ((storedLang || profile.language || 'English') as 'Hinglish' | 'Hindi' | 'English');
 
   useEffect(() => {
     const translateNode = (node: Node) => {
