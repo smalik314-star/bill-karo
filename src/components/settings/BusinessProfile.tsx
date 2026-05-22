@@ -7,51 +7,139 @@ import toast from 'react-hot-toast';
 
 export default function BusinessProfile() {
 
-  const { profile, updateProfile } = useAppStore();
+  const { updateProfile } = useAppStore();
 
-  const [form, setForm] = useState({
-    businessName: profile.businessName || '',
-    ownerName: profile.ownerName || '',
-    phone: profile.phone || '',
-    address: profile.address || '',
-    gstNumber: profile.gstNumber || '',
-    isRegisteredGST: profile.isRegisteredGST || false,
-    bankName: profile.bankName || '',
-    accountNumber: profile.accountNumber || '',
-    ifscCode: profile.ifscCode || '',
-    upiId: profile.upiId || '',
-    signatureText: profile.signatureText || '',
-    logoUrl: (profile as any).logoUrl || '',
-    language: (profile as any).language || 'Hinglish'
+  const [form, setForm] = useState<{
+    businessName: string;
+    ownerName: string;
+    phone: string;
+    address: string;
+    gstNumber: string;
+    isRegisteredGST: boolean;
+    bankName: string;
+    accountNumber: string;
+    ifscCode: string;
+    upiId: string;
+    signatureText: string;
+    logoUrl: string;
+    language: 'Hinglish' | 'Hindi' | 'English';
+  }>({
+    businessName: '',
+    ownerName: '',
+    phone: '',
+    address: '',
+    gstNumber: '',
+    isRegisteredGST: false,
+    bankName: '',
+    accountNumber: '',
+    ifscCode: '',
+    upiId: '',
+    signatureText: '',
+    logoUrl: '',
+    language: 'English'
   });
 
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  // Quick sync if profile changes out of bounds
+  // Load profile data from Supabase 'profiles' table on component mount
   useEffect(() => {
-    setForm({
-      businessName: profile.businessName || '',
-      ownerName: profile.ownerName || '',
-      phone: profile.phone || '',
-      address: profile.address || '',
-      gstNumber: profile.gstNumber || '',
-      isRegisteredGST: profile.isRegisteredGST || false,
-      bankName: profile.bankName || '',
-      accountNumber: profile.accountNumber || '',
-      ifscCode: profile.ifscCode || '',
-      upiId: profile.upiId || '',
-      signatureText: profile.signatureText || '',
-      logoUrl: (profile as any).logoUrl || '',
-      language: (profile as any).language || 'Hinglish'
-    });
-  }, [profile]);
+    let isMounted = true;
+    const fetchProfile = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', user.id);
+
+          if (error) {
+            console.error('Supabase fetch profiles error:', error);
+            return;
+          }
+
+          if (data && data.length > 0) {
+            const prof = data[0];
+            const bankDetails = prof.bank_details || {};
+            const loadedData = {
+              businessName: prof.name || '',
+              ownerName: prof.owner || '',
+              phone: prof.phone || '',
+              address: prof.address || '',
+              gstNumber: prof.gstin || '',
+              isRegisteredGST: !!prof.gstin,
+              bankName: bankDetails.bank_name || '',
+              accountNumber: bankDetails.account_number || '',
+              ifscCode: bankDetails.ifsc_code || '',
+              upiId: prof.upi_id || '',
+              signatureText: prof.signature_text || '',
+              logoUrl: prof.logo_url || '',
+              language: (prof.language || 'English') as 'Hinglish' | 'Hindi' | 'English'
+            };
+            if (isMounted) {
+              setForm(loadedData);
+              updateProfile(loadedData);
+            }
+          } else {
+            // If no data found — show empty fields
+            const emptyData = {
+              businessName: '',
+              ownerName: '',
+              phone: '',
+              address: '',
+              gstNumber: '',
+              isRegisteredGST: false,
+              bankName: '',
+              accountNumber: '',
+              ifscCode: '',
+              upiId: '',
+              signatureText: '',
+              logoUrl: '',
+              language: 'English' as const
+            };
+            if (isMounted) {
+              setForm(emptyData);
+              updateProfile(emptyData);
+            }
+          }
+        } else {
+          // If no authenticated user found — show empty fields
+          const emptyData = {
+            businessName: '',
+            ownerName: '',
+            phone: '',
+            address: '',
+            gstNumber: '',
+            isRegisteredGST: false,
+            bankName: '',
+            accountNumber: '',
+            ifscCode: '',
+            upiId: '',
+            signatureText: '',
+            logoUrl: '',
+            language: 'English' as const
+          };
+          if (isMounted) {
+            setForm(emptyData);
+            updateProfile(emptyData);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching Supabase profiles:', err);
+      }
+    };
+
+    fetchProfile();
+    return () => {
+      isMounted = false;
+    };
+  }, [updateProfile]);
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check size limit (e.g., 2MB)
     if (file.size > 2 * 1024 * 1024) {
       toast.error('लोगो साइज़ 2MB से कम होना चाहिए!');
       return;
@@ -59,11 +147,9 @@ export default function BusinessProfile() {
 
     setUploading(true);
     try {
-      // 1. Double check Supabase Auth Session
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        // Build file path user-specific
         const fileExt = file.name.split('.').pop();
         const fileName = `${user.id}-${Date.now()}.${fileExt}`;
         const filePath = `logos/${fileName}`;
@@ -86,7 +172,6 @@ export default function BusinessProfile() {
         }
       }
 
-      // Offline Base64 fallback (extremely reliable)
       const reader = new FileReader();
       reader.onload = () => {
         setForm(prev => ({ ...prev, logoUrl: reader.result as string }));
@@ -105,42 +190,51 @@ export default function BusinessProfile() {
     e.preventDefault();
     setSaving(true);
     try {
-      // 1. Trigger Zustand Store update
       updateProfile(form);
 
-      // 2. Try to sync to Supabase if logged in
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        // Fetch active business id
         const { data: bData } = await supabase
           .from('profiles')
           .select('id')
           .eq('user_id', user.id);
 
+        const profileData = {
+          user_id: user.id,
+          name: form.businessName,
+          owner: form.ownerName,
+          phone: form.phone,
+          address: form.address,
+          gstin: form.gstNumber,
+          upi_id: form.upiId,
+          bank_details: {
+            bank_name: form.bankName,
+            account_number: form.accountNumber,
+            ifsc_code: form.ifscCode
+          },
+          logo_url: form.logoUrl,
+          language: form.language,
+          signature_text: form.signatureText,
+          updated_at: new Date().toISOString()
+        };
+
         if (bData && bData.length > 0) {
           const activeBId = bData[0].id;
           const { error } = await supabase
             .from('profiles')
-            .update({
-              name: form.businessName,
-              owner: form.ownerName,
-              phone: form.phone,
-              address: form.address,
-              gstin: form.gstNumber,
-              upi_id: form.upiId,
-              bank_details: {
-                bank_name: form.bankName,
-                account_number: form.accountNumber,
-                ifsc_code: form.ifscCode
-              },
-              logo_url: form.logoUrl,
-              language: form.language,
-              updated_at: new Date().toISOString()
-            })
+            .update(profileData)
             .eq('id', activeBId);
 
           if (error) {
             console.warn('Supabase update rejected. Profile saved locally.', error);
+          }
+        } else {
+          const { error } = await supabase
+            .from('profiles')
+            .insert([profileData]);
+
+          if (error) {
+            console.warn('Supabase insert rejected. Profile saved locally.', error);
           }
         }
       }
@@ -153,7 +247,6 @@ export default function BusinessProfile() {
     }
   };
 
-  // Generate real dynamic UPI intent URL for preview logic
   const upiIntentString = form.upiId
     ? `upi://pay?pa=${encodeURIComponent(form.upiId)}&pn=${encodeURIComponent(form.businessName || 'Dhandha Payment')}&cu=INR`
     : '';
@@ -166,7 +259,7 @@ export default function BusinessProfile() {
     <form onSubmit={handleSave} className="space-y-6 select-none animate-fadeIn">
       
       {/* Upper Logo & Visual Header grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-950 p-5 rounded-3xl border border-gray-850">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-950 p-5 rounded-3xl border border-gray-855">
         
         {/* LOGO Uploader container */}
         <div className="flex flex-col items-center justify-center p-4 border border-dashed border-gray-800 rounded-2xl relative bg-[#070912]">
@@ -193,7 +286,7 @@ export default function BusinessProfile() {
             )}
           </div>
 
-          <label className="mt-4 bg-gray-900 hover:bg-gray-850 border border-gray-850 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-gray-300 cursor-pointer transition">
+          <label className="mt-4 bg-gray-900 hover:bg-gray-855 border border-gray-855 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider text-gray-300 cursor-pointer transition">
             लोगो फ़ाइल चुनें (Choose Image)
             <input 
               type="file" 
@@ -203,7 +296,7 @@ export default function BusinessProfile() {
               disabled={uploading}
             />
           </label>
-          <p className="text-[9px] text-gray-500 mt-2 text-center">
+          <p className="text-[9px] text-gray-550 mt-2 text-center">
             PNG, JPG format • Max size 2MB
           </p>
         </div>
@@ -223,7 +316,7 @@ export default function BusinessProfile() {
                 एप्लीकेशन की डिफ़ॉल्ट भाषा (In-app Preferred language)
               </label>
               
-              <div className="grid grid-cols-3 gap-2 bg-[#0a0d16] p-1 rounded-xl border border-gray-850">
+              <div className="grid grid-cols-3 gap-2 bg-[#0a0d16] p-1 rounded-xl border border-gray-855">
                 {['Hinglish', 'Hindi', 'English'].map(langOption => {
                   const isActive = form.language === langOption;
                   return (
@@ -268,7 +361,7 @@ export default function BusinessProfile() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Column Left: Basic dhandha info */}
-        <div className="lg:col-span-2 bg-gray-950 p-5 rounded-3xl border border-gray-850 space-y-4">
+        <div className="lg:col-span-2 bg-gray-950 p-5 rounded-3xl border border-gray-855 space-y-4">
           <div className="flex items-center space-x-2 pb-2 border-b border-gray-900">
             <Building className="h-4.5 w-4.5 text-amber-500" />
             <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">कंपनी / दुकान के बुनियादी विवरण (Basic Corporate Info)</h4>
@@ -362,7 +455,7 @@ export default function BusinessProfile() {
                   value={form.gstNumber}
                   onChange={e => setForm({ ...form, gstNumber: e.target.value.toUpperCase() })}
                   placeholder="e.g. 09AABCU1234F1Z8"
-                  className="w-full bg-[#0B0F1A] border border-gray-850 rounded-xl p-2.5 text-xs text-white font-mono tracking-widest focus:outline-none focus:border-amber-500"
+                  className="w-full bg-[#0B0F1A] border border-gray-855 rounded-xl p-2.5 text-xs text-white font-mono tracking-widest focus:outline-none focus:border-amber-500"
                 />
               </div>
             )}
@@ -373,7 +466,7 @@ export default function BusinessProfile() {
         <div className="space-y-6">
           
           {/* Bank fields container */}
-          <div className="bg-gray-950 p-5 rounded-3xl border border-gray-850 space-y-4">
+          <div className="bg-gray-950 p-5 rounded-3xl border border-gray-855 space-y-4">
             <div className="flex items-center space-x-2 pb-2 border-b border-gray-900">
               <Smartphone className="h-4.5 w-4.5 text-amber-500" />
               <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">बैंक खाता विवरण (Bank Credentials)</h4>
@@ -417,7 +510,7 @@ export default function BusinessProfile() {
           </div>
 
           {/* UPI Code & QR Preview Container */}
-          <div className="bg-gray-950 p-5 rounded-3xl border border-gray-850 space-y-4">
+          <div className="bg-gray-950 p-5 rounded-3xl border border-gray-855 space-y-4">
             <div className="flex items-center space-x-2 pb-2 border-b border-gray-900">
               <QrCode className="h-4.5 w-4.5 text-amber-500" />
               <h4 className="text-xs font-black text-gray-200 uppercase tracking-tight">UPI आईडी और क्यूआर (Payment QR)</h4>
@@ -436,7 +529,7 @@ export default function BusinessProfile() {
               </div>
 
               {form.upiId ? (
-                <div className="bg-[#0B0F1A] border border-gray-850 p-4 rounded-2xl flex flex-col items-center justify-center space-y-2">
+                <div className="bg-[#0B0F1A] border border-gray-855 p-3 rounded-2xl flex flex-col items-center justify-center space-y-2">
                   <div className="bg-white p-2.5 rounded-xl border border-gray-200 shadow-sm relative overflow-hidden group">
                     <img 
                       src={upiQrImgUrl} 
